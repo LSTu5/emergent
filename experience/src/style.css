@@ -1045,3 +1045,50 @@ main.comparison-workspace .comparison {
   min-width: 0;
   width: 100%;
 }
+
+.editing-guide {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #edf0e7;
+  color: #37555b;
+  border-top: 1px solid #d9e0d4;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.editing-guide strong {
+  display: block;
+  color: #173f45;
+  font-size: 12px;
+}
+.editing-guide button,
+.editing-guide select {
+  flex-shrink: 0;
+  max-width: 240px;
+  font-size: 11px;
+}
+.editing-guide.editing-active {
+  background: #e5efd9;
+}
+.map-canvas canvas {
+  touch-action: none;
+  user-select: none;
+}
+.map-hint {
+  pointer-events: none;
+}
+.map-hint.invalid {
+  color: #953d2c;
+  background: #fff0e8;
+}
+@media (max-width: 1000px) {
+  .editing-guide {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .editing-guide select {
+    max-width: 100%;
+  }
+}

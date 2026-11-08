@@ -5,7 +5,121 @@ import {
   type Point,
   type Venue,
   type Config,
+  type PathNode,
 } from "./contracts";
+const NODE_FIELDS = ["id", "x", "y", "floor"] as const;
+const EDGE_FIELDS = [
+  "id",
+  "from",
+  "to",
+  "width",
+  "enabled",
+  "structural",
+  "accessible",
+] as const;
+const FOOTPRINT_FIELDS = [
+  "x",
+  "y",
+  "w",
+  "h",
+  "floor",
+  "nodeId",
+  "movable",
+] as const;
+function sameFields<T>(a: T, b: T, fields: readonly (keyof T)[]) {
+  return fields.every((key) => a[key] === b[key]);
+}
+function sameNodes(nodes: PathNode[], expected: PathNode[]) {
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  return (
+    nodes.length === expected.length &&
+    byId.size === nodes.length &&
+    expected.every((node) => {
+      const actual = byId.get(node.id);
+      return actual !== undefined && sameFields(actual, node, NODE_FIELDS);
+    })
+  );
+}
+
+// Early pier39.v2 saves predate the corrected north-pier directory geometry.
+// Recognize that exact map, rather than treating arbitrary node edits as legacy.
+const LEGACY_LOCATIONS: Record<string, { x: number; row: number }> = {
+  "bay-plunge": { x: 94, row: 5 },
+  "west-gifts": { x: 23, row: 6 },
+  carousel: { x: 94, row: 6 },
+  christmas: { x: 23, row: 7 },
+  "sea-lions": { x: 23, row: 8 },
+  "bay-stage": { x: 94, row: 9 },
+};
+const legacyNodes = BASELINE.nodes.map((node) => {
+  const location = LEGACY_LOCATIONS[node.id.replace(/^door-/, "")];
+  return location && node.id.startsWith("door-")
+    ? { ...node, x: location.x === 23 ? 58 : 94, y: 287 - location.row * 24 }
+    : node;
+});
+const legacyEdges = BASELINE.edges
+  .filter((edge) => edge.structural)
+  .map((edge) => {
+    const location = LEGACY_LOCATIONS[edge.id.replace(/^access-/, "")];
+    return location ? { ...edge, from: `f1-${location.row}` } : edge;
+  });
+const legacyBuildings = BASELINE.venues
+  .filter((venue) => !venue.movable)
+  .map((venue) => {
+    const location = LEGACY_LOCATIONS[venue.id];
+    return location
+      ? { ...venue, x: location.x, y: 278 - location.row * 24 }
+      : venue;
+  });
+export function upgradeLegacyLayout(layout: Layout): Layout {
+  if (
+    layout?.version !== "pier39.v2" ||
+    !Array.isArray(layout.nodes) ||
+    !Array.isArray(layout.edges) ||
+    !Array.isArray(layout.venues) ||
+    !sameNodes(layout.nodes, legacyNodes) ||
+    !legacyEdges.every((edge) =>
+      layout.edges.some((actual) => sameFields(actual, edge, EDGE_FIELDS)),
+    ) ||
+    !legacyBuildings.every((venue) =>
+      layout.venues.some(
+        (actual) =>
+          actual.id === venue.id && sameFields(actual, venue, FOOTPRINT_FIELDS),
+      ),
+    )
+  )
+    return layout;
+
+  const next = clone(layout);
+  next.nodes = clone(BASELINE.nodes);
+  next.edges = next.edges.map((edge) => {
+    const fixed = BASELINE.edges.find(
+      (current) => current.structural && current.id === edge.id,
+    );
+    return fixed ? clone(fixed) : edge;
+  });
+  for (const venue of next.venues) {
+    const fixed = BASELINE.venues.find(
+      (current) => !current.movable && current.id === venue.id,
+    );
+    if (fixed)
+      for (const key of FOOTPRINT_FIELDS) (venue as any)[key] = fixed[key];
+    // The early default kiosk was six metres wide and clipped the boardwalk.
+    // Preserve its location and business assumptions while applying the corrected footprint.
+    if (
+      venue.id === "snack-kiosk" &&
+      venue.movable &&
+      venue.floor === 1 &&
+      venue.x === 65 &&
+      venue.w === 6 &&
+      venue.h === 6 &&
+      ((venue.y === 181 && venue.nodeId === "f1-4") ||
+        (venue.y === 85 && venue.nodeId === "f1-8"))
+    )
+      venue.w = 4;
+  }
+  return next;
+}
 export function distance(a: Point, b: Point) {
   return Math.hypot(a.x - b.x, a.y - b.y) + (a.floor !== b.floor ? 18 : 0);
 }
@@ -70,15 +184,12 @@ export function validateLayout(l: Layout): string[] {
   if (l.version !== "pier39.v2") errors.push("Unsupported layout version");
   if (new Set(l.venues.map((v) => v.id)).size !== l.venues.length)
     errors.push("Duplicate venue IDs");
-  if (
-    l.nodes.length !== BASELINE.nodes.length ||
-    JSON.stringify(l.nodes) !== JSON.stringify(BASELINE.nodes)
-  )
+  if (!sameNodes(l.nodes, BASELINE.nodes))
     errors.push("Permanent navigation nodes must stay fixed");
   for (const b of BASELINE.edges.filter((e) => e.structural))
     if (
       !l.edges.some(
-        (e) => e.id === b.id && JSON.stringify(e) === JSON.stringify(b),
+        (e) => sameFields(e, b, EDGE_FIELDS),
       )
     )
       errors.push(`Preserve structural connection ${b.id}`);
@@ -125,15 +236,6 @@ export function validateLayout(l: Layout): string[] {
     )
       errors.push(`Invalid numeric value at ${v.name}`);
     if (
-      v.x < 8 ||
-      v.x + v.w > 146 ||
-      v.y < 22 ||
-      v.y + v.h > 302 ||
-      v.w <= 0 ||
-      v.h <= 0
-    )
-      errors.push(`${v.name} must stay on the pier`);
-    if (
       v.capacity < 1 ||
       v.capacity > 500 ||
       !Number.isInteger(v.capacity) ||
@@ -166,38 +268,7 @@ export function validateLayout(l: Layout): string[] {
       distance({ ...v, x: v.x + v.w / 2, y: v.y + v.h / 2 }, door) > 22
     )
       errors.push(`${v.name} is too far from a pedestrian route`);
-    for (const other of l.venues)
-      if (
-        v.id < other.id &&
-        v.floor === other.floor &&
-        v.x < other.x + other.w &&
-        v.x + v.w > other.x &&
-        v.y < other.y + other.h &&
-        v.y + v.h > other.y
-      )
-        errors.push(`${v.name} overlaps ${other.name}`);
-    if (v.movable)
-      for (const e of l.edges.filter((e) => e.enabled)) {
-        const a = l.nodes.find((n) => n.id === e.from),
-          b = l.nodes.find((n) => n.id === e.to);
-        if (!a || !b || a.floor !== v.floor || b.floor !== v.floor) continue;
-        const steps = Math.max(1, Math.ceil(distance(a, b)));
-        let blocked = false;
-        for (let i = 0; i <= steps; i++) {
-          const x = a.x + ((b.x - a.x) * i) / steps,
-            y = a.y + ((b.y - a.y) * i) / steps;
-          if (
-            x > v.x - e.width / 2 &&
-            x < v.x + v.w + e.width / 2 &&
-            y > v.y - e.width / 2 &&
-            y < v.y + v.h + e.width / 2
-          ) {
-            blocked = true;
-            break;
-          }
-        }
-        if (blocked) errors.push(`${v.name} blocks path ${e.id}`);
-      }
+    errors.push(...placementConflicts(l, v, true));
     if (
       !Array.isArray(v.eventStarts) ||
       v.eventStarts.some((t) => !Number.isFinite(t) || t < 0 || t >= 1440)
@@ -258,4 +329,70 @@ export function nearestNode(l: Layout, v: Point) {
 }
 export function clone<T>(v: T): T {
   return structuredClone(v);
+}
+
+export function pathName(l: Layout, e: Layout["edges"][number]) {
+  if (e.id === "entrance") return "main entrance";
+  if (e.id.startsWith("access-")) {
+    const venue = l.venues.find((v) => v.id === e.id.slice(7));
+    return `${venue?.name ?? "venue"} entrance`;
+  }
+  const level = l.nodes.find((n) => n.id === e.from)?.floor ?? 1;
+  if (e.id.startsWith("walk-")) return `Level ${level} main promenade`;
+  if (e.id.startsWith("promenade-")) return `Level ${level} west promenade`;
+  if (e.id.startsWith("cross-")) return `Level ${level} connecting walkway`;
+  return "pedestrian connection";
+}
+
+/** Shared by validation, automatic placement and the live drag preview. */
+export function placementConflicts(
+  l: Layout,
+  v: Venue,
+  orderedPairs = false,
+): string[] {
+  const errors: string[] = [];
+  if (
+    v.x < 8 ||
+    v.x + v.w > 146 ||
+    v.y < 22 ||
+    v.y + v.h > 302 ||
+    v.w <= 0 ||
+    v.h <= 0
+  )
+    errors.push(`${v.name} must stay on the pier`);
+  for (const other of l.venues)
+    if (
+      v.id !== other.id &&
+      (!orderedPairs || v.id < other.id) &&
+      v.floor === other.floor &&
+      v.x < other.x + other.w &&
+      v.x + v.w > other.x &&
+      v.y < other.y + other.h &&
+      v.y + v.h > other.y
+    )
+      errors.push(`${v.name} overlaps ${other.name}`);
+  if (v.movable)
+    for (const e of l.edges.filter((e) => e.enabled)) {
+      const a = l.nodes.find((n) => n.id === e.from),
+        b = l.nodes.find((n) => n.id === e.to);
+      if (!a || !b || a.floor !== v.floor || b.floor !== v.floor) continue;
+      const steps = Math.max(1, Math.ceil(distance(a, b)));
+      let blocked = false;
+      for (let i = 0; i <= steps; i++) {
+        const x = a.x + ((b.x - a.x) * i) / steps,
+          y = a.y + ((b.y - a.y) * i) / steps;
+        if (
+          x > v.x - e.width / 2 &&
+          x < v.x + v.w + e.width / 2 &&
+          y > v.y - e.width / 2 &&
+          y < v.y + v.h + e.width / 2
+        ) {
+          blocked = true;
+          break;
+        }
+      }
+      if (blocked) errors.push(`${v.name} blocks path: ${pathName(l, e)}`);
+    }
+
+  return [...new Set(errors)];
 }

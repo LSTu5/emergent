@@ -34,6 +34,8 @@ Ports: Experience **4320**, Engine **4321**, SpacetimeDB **4322**, Laya **4318**
 6. Read absolute sales, percentage changes, seed variation, admitted visitors, parking turnaways, meals, waiting and no-purchase departures. **Where spending moved** separates gains and declines across venues, which reconcile to the net pier-wide change.
 7. Open a completed run, press **Replay**, then **Play recording** or scrub the timeline. Switch floors and inspect recorded venue and visitor state. A bundled recording of an actual completed local-AI run is imported on startup for a dependable presentation.
 
+In **Plan the pier**, create an alternative before editing. New kiosks, seating and event areas are placed in a clear, accessible space automatically. Drag the object or its label: green marks a valid position, red explains a blocked position, and an invalid drop leaves the object where it was. For an older draft with overlapping objects, **Find clear positions for objects** repairs movable placements while preserving business assumptions; the repair can be undone.
+
 A live local-AI run can take minutes. Achieved speed is displayed; replay is the immediate demo path. The rules provider is faster and explicitly labeled. Geometry is frozen per run, so later edits apply to a new simulation. Saved layouts, reports and runs survive restart. Failed or interrupted pairs remain visible and are excluded from completed-pair summaries.
 
 ## Useful management questions

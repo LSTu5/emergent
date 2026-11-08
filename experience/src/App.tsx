@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import demoManifest from "../../data/demo-manifest.json";
 import { BASELINE, categoryDefaults } from "../../shared/baseline";
-import { clone, nearestNode, validateLayout } from "../../shared/layout";
+import { clone, upgradeLegacyLayout, validateLayout } from "../../shared/layout";
+import {
+  findVenuePosition,
+  placeVenue,
+  repairObjectPositions,
+} from "../../shared/editing";
 import {
   DEFAULT_CONFIG,
   CATEGORIES,
@@ -134,6 +139,13 @@ export default function App() {
   const errors = validateLayout(layout);
   const frame = frameIndex >= 0 ? frames[frameIndex] : null;
   const metrics = frame?.metrics ?? run?.metrics;
+  function loadPlanningLayout(source: Layout) {
+    const current = upgradeLegacyLayout(source);
+    setLayout(clone(current));
+    setError("");
+    if (current !== source)
+      setNotice("Updated this older layout to the current pier map. Business assumptions are preserved; save a new version to keep it.");
+  }
   async function refresh() {
     try {
       setHealth(await api("/health"));
@@ -205,6 +217,7 @@ export default function App() {
     }
   }
   function edit(next: Layout) {
+    setError("");
     setHistory((h) => [...h.slice(-49), clone(layout)]);
     setFuture([]);
     setLayout({ ...next, revision: layout.revision + 1 });
@@ -228,26 +241,66 @@ export default function App() {
       revision: 1,
       name: "Alternative 01",
     });
-    setNotice("Alternative created. Select a venue or drag a movable object.");
+    setError("");
+    setSelected("snack-kiosk");
+    setGuest(null);
+    setNotice(
+      "Alternative created. Drag a highlighted object or its label to move it.",
+    );
     setTab("plan");
   }
-  function move(id: string, p: Point) {
-    const n = clone(layout),
-      v = n.venues.find((v) => v.id === id)!;
-    Object.assign(v, p);
-    v.nodeId = nearestNode(n, { ...v, x: v.x + v.w / 2, y: v.y + v.h / 2 }).id;
-    const e = validateLayout(n);
-    if (e.length) {
-      setError(e[0]);
+  function move(id: string, point: Point) {
+    if (!editable || tab !== "plan") return;
+    const venue = layout.venues.find((v) => v.id === id);
+    if (!venue?.movable) return;
+    const result = placeVenue(layout, venue, point);
+    if (result.errors.length) {
+      setNotice("");
+      setError(
+        `Move cancelled. ${result.errors[0]}. The object stayed in its previous position.`,
+      );
       return;
     }
     setError("");
-    edit(n);
+    edit({
+      ...clone(layout),
+      venues: layout.venues.map((v) => (v.id === id ? result.venue : v)),
+    });
+    setNotice(`${venue.name} moved. Undo is available; save when ready.`);
+  }
+  function repairPlacement() {
+    const result = repairObjectPositions(layout);
+    if (!result) {
+      setError(
+        "There is not enough connected clear space to reposition every object. Remove an object or reopen a path, then try again.",
+      );
+      return;
+    }
+    setError("");
+    if (result.moved) edit(result.layout);
+    setNotice(
+      result.moved
+        ? `Repositioned ${result.moved} objects in nearby clear spaces. Business settings and paths are preserved. You can Undo this change.`
+        : "Object positions are already clear. Check the remaining operating assumptions.",
+    );
+  }
+  function editPaths(next: Layout) {
+    const existing = new Set(validateLayout(layout));
+    const introduced = validateLayout(next).filter((e) => !existing.has(e));
+    if (introduced.length) {
+      setNotice("");
+      setError(
+        `Path change cancelled. ${introduced[0]}. Move the affected object or keep another accessible route open first.`,
+      );
+      return;
+    }
+    setError("");
+    edit(next);
   }
   function add(category: Venue["category"]) {
-    setBothFloors(false);
+    if (!editable || tab !== "plan") return;
     const n = clone(layout);
-    const id = `object-${Date.now()}`;
+    const id = `object-${crypto.randomUUID()}`;
     const v: Venue = {
       id,
       name:
@@ -279,14 +332,23 @@ export default function App() {
       source: "Management proposal",
       ...categoryDefaults(category),
     };
-    for (let y = 35; y < 290; y += 12) {
-      v.y = y;
-      v.nodeId = nearestNode(n, { ...v, x: v.x + 3, y: v.y + 3 }).id;
-      if (!validateLayout({ ...n, venues: [...n.venues, v] }).length) break;
+    const placed = findVenuePosition(n, v);
+    if (!placed) {
+      setNotice("");
+      setError(
+        `No clear, accessible space is available on Level ${floor}. Nothing was added. Try another floor or remove an object.`,
+      );
+      return;
     }
-    n.venues.push(v);
+    n.venues.push(placed);
+    setError("");
+    setBothFloors(false);
+    setGuest(null);
     edit(n);
     setSelected(id);
+    setNotice(
+      `${placed.name} added in a clear space. Drag its label or the object to reposition it.`,
+    );
   }
   function changeWindow(key: "start" | "end", value: number) {
     const c = { ...config, [key]: value };
@@ -311,7 +373,7 @@ export default function App() {
     setRun(snapshot);
     setRunId(id);
     setConfig(clone(snapshot.config));
-    setLayout(clone(snapshot.layout));
+    loadPlanningLayout(snapshot.layout);
     setHistory([]);
     setFuture([]);
     setFrames([]);
@@ -414,7 +476,7 @@ export default function App() {
                 comparison &&
                 comparison.pairs.some((p) => p.a === runId || p.b === runId)
               ) {
-                setLayout(clone(comparison.variant));
+                loadPlanningLayout(comparison.variant);
                 setConfig(clone(comparison.config));
                 setHistory([]);
                 setFuture([]);
@@ -457,9 +519,12 @@ export default function App() {
             <select
               value={layout.id}
               onChange={(e) => {
-                const l = saved.find((l) => l.id === e.target.value);
+                const l =
+                  e.target.value === BASELINE.id
+                    ? BASELINE
+                    : saved.find((l) => l.id === e.target.value);
                 if (l) {
-                  setLayout(clone(l));
+                  loadPlanningLayout(l);
                   setHistory([]);
                   setFuture([]);
                 }
@@ -493,6 +558,8 @@ export default function App() {
                 <button
                   disabled={!history.length}
                   onClick={() => {
+                    setError("");
+                    setNotice("Undid the last layout change.");
                     setFuture((f) => [clone(layout), ...f]);
                     setLayout(history.at(-1)!);
                     setHistory((h) => h.slice(0, -1));
@@ -503,6 +570,8 @@ export default function App() {
                 <button
                   disabled={!future.length}
                   onClick={() => {
+                    setError("");
+                    setNotice("Restored the layout change.");
                     setHistory((h) => [...h, clone(layout)]);
                     setLayout(future[0]);
                     setFuture((f) => f.slice(1));
@@ -687,7 +756,7 @@ export default function App() {
                         const n = clone(layout);
                         n.edges.find((p) => p.id === pathId)!.width =
                           +e.target.value;
-                        edit(n);
+                        editPaths(n);
                       }}
                     />
                   </label>
@@ -697,7 +766,7 @@ export default function App() {
                       const n = clone(layout);
                       const e = n.edges.find((e) => e.id === pathId)!;
                       e.enabled = !e.enabled;
-                      edit(n);
+                      editPaths(n);
                     }}
                   >
                     Toggle selected path
@@ -1014,7 +1083,7 @@ export default function App() {
                     const report = reports.find((r) => r.id === e.target.value);
                     if (report) {
                       setComparison(report);
-                      setLayout(clone(report.variant));
+                      loadPlanningLayout(report.variant);
                       setConfig(clone(report.config));
                       setPairs(report.pairs.length);
                       setHistory([]);
@@ -1111,6 +1180,65 @@ export default function App() {
                   <option value="occupancy">Occupancy</option>
                 </select>
               </div>
+              <div
+                className={`editing-guide ${tab === "plan" && editable ? "editing-active" : ""}`}
+              >
+                {tab !== "plan" ? (
+                  <>
+                    <span>
+                      <strong>Simulation view · layout locked</strong> Open the
+                      editor to move objects; recordings keep their original
+                      layout.
+                    </span>
+                    <button onClick={() => setTab("plan")}>
+                      Open layout editor
+                    </button>
+                  </>
+                ) : !editable ? (
+                  <>
+                    <span>
+                      <strong>Current pier · read only</strong> Create an
+                      alternative to add and move kiosks, seating and event
+                      areas.
+                    </span>
+                    <button onClick={makeAlternative}>
+                      Create editable alternative
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <span>
+                      <strong>Layout editor</strong> Drag a highlighted object
+                      or its label. Green = clear; red = blocked. Buildings stay
+                      fixed.
+                    </span>
+                    <select
+                      aria-label="Select movable object"
+                      value={venue?.movable ? venue.id : ""}
+                      onChange={(e) => {
+                        const v = layout.venues.find(
+                          (v) => v.id === e.target.value,
+                        );
+                        if (v) {
+                          setSelected(v.id);
+                          setFloor(v.floor);
+                          setBothFloors(false);
+                          setGuest(null);
+                        }
+                      }}
+                    >
+                      <option value="">Find a movable object…</option>
+                      {layout.venues
+                        .filter((v) => v.movable)
+                        .map((v) => (
+                          <option key={v.id} value={v.id}>
+                            {v.name} · L{v.floor}
+                          </option>
+                        ))}
+                    </select>
+                  </>
+                )}
+              </div>
               <PierMap
                 layout={viewLayout}
                 floor={floor}
@@ -1121,7 +1249,7 @@ export default function App() {
                 }}
                 selected={selected}
                 run={tab === "simulate" ? run : null}
-                frame={frame}
+                frame={tab === "simulate" ? frame : null}
                 heat={heat}
                 editable={tab === "plan" && editable}
                 paths={paths && tab === "plan"}
@@ -1138,7 +1266,7 @@ export default function App() {
                   n.edges.find((e) => e.id === id)!.enabled = !n.edges.find(
                     (e) => e.id === id,
                   )!.enabled;
-                  edit(n);
+                  editPaths(n);
                 }}
                 onGuest={(id) => setGuest(id)}
               />
@@ -1581,7 +1709,9 @@ export default function App() {
                 {venue.movable && (
                   <p className="hint">
                     Position: x {venue.x}, y {venue.y} · Level {venue.floor}.
-                    Drag to move; coordinates are modeled meters.
+                    {tab === "plan" && editable
+                      ? "Drag the object or its label to move it; coordinates are modeled meters."
+                      : "Open the layout editor to move this object."}
                   </p>
                 )}
                 {venue.movable && (
@@ -1616,6 +1746,11 @@ export default function App() {
           {errors.length > 0 && (
             <div className="validation">
               <b>Layout needs attention</b>
+              {tab === "plan" && editable && (
+                <button className="wide" onClick={repairPlacement}>
+                  Find clear positions for objects
+                </button>
+              )}
               {errors.map((e) => (
                 <p key={e}>{e}</p>
               ))}

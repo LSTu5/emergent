@@ -1,0 +1,37 @@
+{
+  "checkedAt": "2026-11-08T15:35:36.400262+00:00",
+  "layout": {
+    "id": "layout-3787ec1f-1880-4ee7-b1ed-646f87a66897",
+    "revision": 8,
+    "venues": 40
+  },
+  "engineRun": {
+    "id": "run-3ad470fc-de2c-4f80-a38e-de8e71a27768",
+    "status": "completed",
+    "visitors": 60,
+    "sales": 323109
+  },
+  "browserChecks": [
+    "Dragged kiosk label from (65,181) to (66,158)",
+    "Blocked drop preserved prior position",
+    "Undo and redo restored placements",
+    "Added two kiosks, seating and an event on Level 1 without errors",
+    "Added a kiosk on Level 2 without errors",
+    "Dragged object body at zoom to (83,131)",
+    "Released outside map: placement rejected and editor remained usable",
+    "Saved and validated layout with five additions",
+    "Switched to read-only baseline and reloaded saved version 8; Level 2 kiosk remained at (83,131)",
+    "No browser warnings or errors in final console check"
+  ],
+  "unitChecks": [
+    "Repeated placement on both floors",
+    "No-space rejection without layout mutation",
+    "Blocked drop validation",
+    "Repair of overlapping objects and blocked path with settings preserved"
+  ],
+  "validation": {
+    "unitTests": 28,
+    "passed": 28,
+    "productionBuild": "passed"
+  }
+}

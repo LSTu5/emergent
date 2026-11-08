@@ -3,7 +3,7 @@ import { gunzipSync } from "node:zlib";
 import { createServer } from "node:http";
 import { randomUUID, createHash } from "node:crypto";
 import { BASELINE } from "../../shared/baseline";
-import { clone, validateLayout, validateConfig } from "../../shared/layout";
+import { clone, upgradeLegacyLayout, validateLayout, validateConfig } from "../../shared/layout";
 import type {
   Layout,
   Config,
@@ -113,6 +113,7 @@ async function execute(sim: Simulation) {
   }
 }
 function start(layout: Layout, config: Config, cohort?: Profile[]) {
+  layout = upgradeLegacyLayout(layout);
   const errors = [...validateLayout(layout), ...validateConfig(config)];
   if (errors.length) throw Error(errors.join("; "));
   const sim = new Simulation(
@@ -214,7 +215,7 @@ const server = createServer(async (req, res) => {
       return;
     }
     if (path === "/api/layouts" && req.method === "POST") {
-      const l = (await body(req)) as Layout;
+      const l = upgradeLegacyLayout((await body(req)) as Layout);
       const e = validateLayout(l);
       if (e.length) throw Error(e.join("; "));
       if (l.id === BASELINE.id)
@@ -298,6 +299,8 @@ const server = createServer(async (req, res) => {
     }
     if (path === "/api/comparisons" && req.method === "POST") {
       const b = await body(req);
+      b.baseline = upgradeLegacyLayout(b.baseline);
+      b.variant = upgradeLegacyLayout(b.variant);
       const errors = [
         ...validateLayout(b.baseline),
         ...validateLayout(b.variant),

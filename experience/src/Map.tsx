@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Application, Container, Graphics, Rectangle } from "pixi.js";
+import {
+  Application,
+  Container,
+  Graphics,
+  Rectangle,
+  type FederatedPointerEvent,
+} from "pixi.js";
+import { placeVenue } from "../../shared/editing";
 import type {
   Layout,
   Floor,
@@ -41,6 +48,10 @@ export function PierMap(p: Props) {
     camera = useRef({ zoom: 1, x: 0, y: 0 });
   props.current = p;
   const [hover, setHover] = useState<string | null>(null);
+  const [dragFeedback, setDragFeedback] = useState<{
+    text: string;
+    invalid: boolean;
+  } | null>(null);
   useEffect(() => {
     camera.current = { zoom: 1, x: 0, y: 0 };
     (appRef.current as any)?.redraw?.();
@@ -50,6 +61,7 @@ export function PierMap(p: Props) {
     let dead = false,
       resize: ResizeObserver;
     let render = () => {};
+    let cancelDrag: (() => void) | null = null;
     void app
       .init({
         background: 0x9ebfc7,
@@ -237,6 +249,7 @@ export function PierMap(p: Props) {
             models.sortableChildren = true;
             world.addChild(models);
             const overlay = new Container();
+            overlay.sortableChildren = true;
             for (const v of p.layout.venues.filter(
               (v) => v.floor === pane.floor,
             )) {
@@ -271,51 +284,144 @@ export function PierMap(p: Props) {
                 Math.max(8 / scale, maxX - minX + 2),
                 Math.max(10 / scale, maxY - minY + 2),
               );
-              c.eventMode = "static";
-              c.cursor = p.editable && v.movable ? "grab" : "pointer";
-              c.on("pointerover", () => setHover(v.name));
-              c.on("pointerout", () => setHover(null));
-              let start: { x: number; y: number } | null = null,
-                moved = false;
-              c.on("pointerdown", (e) => {
-                e.stopPropagation();
-                if (props.current.editable && v.movable) {
-                  start = { x: e.global.x, y: e.global.y };
-                  moved = false;
+              const labelGroup = new Container();
+              labelGroup.zIndex = selected
+                ? 20
+                : v.movable && p.editable
+                  ? 10
+                  : 0;
+              overlay.addChild(labelGroup);
+              const bindTarget = (target: Container) => {
+                target.eventMode = "static";
+                target.cursor = p.editable && v.movable ? "grab" : "pointer";
+                target.on("pointerover", () =>
+                  setHover(
+                    v.movable && p.editable
+                      ? `Drag ${v.name}`
+                      : `${v.name}${!v.movable && p.editable ? " · fixed building" : ""}`,
+                  ),
+                );
+                target.on("pointerout", () => setHover(null));
+                target.on("pointerdown", (event: FederatedPointerEvent) => {
+                  event.stopPropagation();
+                  if (event.button !== 0) return;
+                  if (!props.current.editable || !v.movable) {
+                    props.current.onSelect(v.id);
+                    return;
+                  }
+                  cancelDrag?.();
+                  pan = null;
                   (app as any).dragging = true;
-                  c.cursor = "grabbing";
-                } else props.current.onSelect(v.id);
-              });
-              c.on("globalpointermove", (e) => {
-                if (!start) return;
-                const dx = e.global.x - start.x,
-                  dy = e.global.y - start.y;
-                moved ||= Math.abs(dx) + Math.abs(dy) > 3;
-                c.position.set(dx / scale, dy / scale);
-              });
-              const end = () => {
-                if (!start) return;
-                const delta = groundDelta(c.x, c.y, 1);
-                start = null;
-                (app as any).dragging = false;
-                props.current.onSelect(v.id);
-                if (moved)
-                  props.current.onMove(v.id, {
-                    x: Math.round(v.x + delta.x),
-                    y: Math.round(v.y + delta.y),
-                    floor: v.floor,
-                  });
-                render();
+                  const pointer = event.pointerId;
+                  const origin = { x: event.global.x, y: event.global.y };
+                  let moved = false;
+                  let destination: Point = { x: v.x, y: v.y, floor: v.floor };
+                  const preview = new Graphics();
+                  preview.zIndex = 30;
+                  preview.eventMode = "none";
+                  overlay.addChild(preview);
+                  app.canvas.setPointerCapture(pointer);
+                  app.canvas.style.cursor = "grabbing";
+                  const update = (e: PointerEvent) => {
+                    if (e.pointerId !== pointer) return;
+                    const bounds = app.canvas.getBoundingClientRect();
+                    const dx =
+                      ((e.clientX - bounds.left) * app.screen.width) /
+                        bounds.width -
+                      origin.x;
+                    const dy =
+                      ((e.clientY - bounds.top) * app.screen.height) /
+                        bounds.height -
+                      origin.y;
+                    moved ||= Math.hypot(dx, dy) > 3;
+                    if (!moved) return;
+                    const delta = groundDelta(dx, dy, scale);
+                    destination = {
+                      x: Math.round(v.x + delta.x),
+                      y: Math.round(v.y + delta.y),
+                      floor: v.floor,
+                    };
+                    const issues = placeVenue(
+                      props.current.layout,
+                      v,
+                      destination,
+                    ).errors;
+                    c.position.set(dx / scale, dy / scale);
+                    labelGroup.position.set(dx / scale, dy / scale);
+                    c.alpha = issues.length ? 0.5 : 0.8;
+                    preview.clear();
+                    const outline: [number, number, number][] = [
+                      [destination.x, destination.y, 0.2],
+                      [destination.x + v.w, destination.y, 0.2],
+                      [destination.x + v.w, destination.y + v.h, 0.2],
+                      [destination.x, destination.y + v.h, 0.2],
+                      [destination.x, destination.y, 0.2],
+                    ];
+                    const color = issues.length ? 0xc44931 : 0x238765;
+                    new Draw(preview)
+                      .poly(outline, color, 0.25)
+                      .line(outline, color, 2 / scale);
+                    setDragFeedback({
+                      text:
+                        issues[0] ??
+                        `Release to place ${v.name} · Esc to cancel`,
+                      invalid: !!issues.length,
+                    });
+                  };
+                  const finish = (commit: boolean) => {
+                    window.removeEventListener("pointermove", update);
+                    window.removeEventListener("pointerup", release);
+                    window.removeEventListener("pointercancel", abort);
+                    window.removeEventListener("keydown", keyboard);
+                    app.canvas.removeEventListener("lostpointercapture", abort);
+                    if (app.canvas.hasPointerCapture(pointer))
+                      app.canvas.releasePointerCapture(pointer);
+                    cancelDrag = null;
+                    (app as any).dragging = false;
+                    app.canvas.style.cursor = "";
+                    c.alpha = 1;
+                    setDragFeedback(null);
+                    setHover(null);
+                    if (commit) {
+                      props.current.onSelect(v.id);
+                      if (moved) props.current.onMove(v.id, destination);
+                    }
+                    render();
+                  };
+                  const release = (e: PointerEvent) => {
+                    if (e.pointerId === pointer) {
+                      update(e);
+                      finish(true);
+                    }
+                  };
+                  const abort = (e: PointerEvent) => {
+                    if (e.pointerId === pointer) finish(false);
+                  };
+                  const keyboard = (e: KeyboardEvent) => {
+                    if (e.key === "Escape") finish(false);
+                  };
+                  cancelDrag = () => finish(false);
+                  window.addEventListener("pointermove", update);
+                  window.addEventListener("pointerup", release);
+                  window.addEventListener("pointercancel", abort);
+                  window.addEventListener("keydown", keyboard);
+                  app.canvas.addEventListener("lostpointercapture", abort);
+                });
               };
-              c.on("pointerup", end);
-              c.on("pointerupoutside", end);
-              if (selected || isLandmark(v) || (!p.both && SHORT[v.id])) {
+              bindTarget(c);
+              if (
+                selected ||
+                (v.movable && p.editable) ||
+                isLandmark(v) ||
+                (!p.both && SHORT[v.id])
+              ) {
                 const q = project(v.x + v.w / 2, v.y + v.h / 2, height + 2);
                 const text = label(
-                  overlay,
-                  BASELINE.venues.find((b) => b.id === v.id)?.name === v.name
-                    ? (SHORT[v.id] ?? v.name)
-                    : v.name,
+                  labelGroup,
+                  (v.movable && p.editable ? "↔ " : "") +
+                    (BASELINE.venues.find((b) => b.id === v.id)?.name === v.name
+                      ? (SHORT[v.id] ?? v.name)
+                      : v.name),
                   q.x,
                   q.y - 5,
                   Math.max(4.6, 10 / scale),
@@ -328,10 +434,15 @@ export function PierMap(p: Props) {
                   .roundRect(q.x - w / 2, q.y - 5 - h / 2, w, h, 2.5)
                   .fill({ color: selected ? 0xffe5a3 : 0xf9f5e8, alpha: 0.96 })
                   .stroke({ color: 0xb5b49f, width: 0.3 });
-                overlay.addChildAt(plate, overlay.children.length - 1);
-                text.eventMode = "static";
-                text.cursor = "pointer";
-                text.on("pointertap", () => props.current.onSelect(v.id));
+                labelGroup.addChildAt(plate, 0);
+                labelGroup.hitArea = new Rectangle(
+                  q.x - w / 2,
+                  q.y - 5 - h / 2,
+                  w,
+                  h,
+                );
+                labelGroup.interactiveChildren = false;
+                bindTarget(labelGroup);
               }
             }
             for (const e of p.layout.edges.filter((e) => {
@@ -411,6 +522,7 @@ export function PierMap(p: Props) {
         (app as any).redraw = render;
       });
     return () => {
+      cancelDrag?.();
       dead = true;
       resize?.disconnect();
       appRef.current = null;
@@ -459,10 +571,14 @@ export function PierMap(p: Props) {
           Fit
         </button>
       </div>
-      <div className="map-hint">
-        {hover ??
+      <div
+        className={`map-hint ${dragFeedback?.invalid ? "invalid" : ""}`}
+        role={dragFeedback ? "status" : undefined}
+      >
+        {dragFeedback?.text ??
+          hover ??
           (p.editable
-            ? "Drag a kiosk or amenity · drag water to pan"
+            ? "Drag a highlighted object or its label · drag water to pan"
             : "Select a place or visitor · drag water to pan")}
       </div>
     </div>

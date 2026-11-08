@@ -3,7 +3,12 @@ import { gunzipSync } from "node:zlib";
 import { createServer } from "node:http";
 import { randomUUID, createHash } from "node:crypto";
 import { BASELINE } from "../../shared/baseline";
-import { clone, upgradeLegacyLayout, validateLayout, validateConfig } from "../../shared/layout";
+import {
+  clone,
+  upgradeLegacyLayout,
+  validateLayout,
+  validateConfig,
+} from "../../shared/layout";
 import type {
   Layout,
   Config,
@@ -11,8 +16,10 @@ import type {
   Comparison,
   Profile,
   RunRecord,
+  Frame,
 } from "../../shared/contracts";
 import { Simulation } from "./simulation";
+import { liveView } from "./liveView";
 import { provider, providerHealth } from "../../intelligence/src/providers";
 import {
   initializeStorage,
@@ -25,6 +32,9 @@ import { population } from "./population";
 const runs = new Map<string, Simulation>();
 const past = new Map<string, Snapshot>();
 const comparisons = new Map<string, Comparison>();
+const views = new Map<string, Frame>();
+const activeSteps = new Map<string, Promise<void>>();
+const viewUpdatedAt = new Map<string, number>();
 const hash = (p: Profile[]) =>
   createHash("sha256").update(JSON.stringify(p)).digest("hex");
 await initializeStorage();
@@ -75,7 +85,21 @@ async function execute(sim: Simulation) {
         continue;
       }
       const started = performance.now();
-      await sim.step();
+      const step = sim.step();
+      activeSteps.set(s.id, step);
+      try {
+        await step;
+        const now = performance.now();
+        if (
+          now - (viewUpdatedAt.get(s.id) ?? 0) >= 150 ||
+          s.status !== "running"
+        ) {
+          views.set(s.id, liveView(s));
+          viewUpdatedAt.set(s.id, now);
+        }
+      } finally {
+        activeSteps.delete(s.id);
+      }
       if (
         s.time - savedAt >= (s.config.visitors > 2000 ? 60 : 15) ||
         (["completed", "failed"] as string[]).includes(s.status)
@@ -110,6 +134,8 @@ async function execute(sim: Simulation) {
   } finally {
     past.set(s.id, s);
     runs.delete(s.id);
+    views.delete(s.id);
+    viewUpdatedAt.delete(s.id);
   }
 }
 function start(layout: Layout, config: Config, cohort?: Profile[]) {
@@ -124,6 +150,7 @@ function start(layout: Layout, config: Config, cohort?: Profile[]) {
     cohort,
   );
   runs.set(sim.snapshot.id, sim);
+  views.set(sim.snapshot.id, liveView(sim.snapshot));
   return sim;
 }
 async function compare(c: Comparison) {
@@ -259,6 +286,16 @@ const server = createServer(async (req, res) => {
       const sim = runs.get(id);
       const s = sim?.snapshot ?? past.get(id);
       if (!s) throw Error("Unknown run");
+      if (action === "view" && req.method === "GET") {
+        res.end(
+          JSON.stringify({
+            runId: id,
+            status: s.status,
+            frame: views.get(id) ?? liveView(s),
+          }),
+        );
+        return;
+      }
       if (action === "replay") {
         res.end(
           JSON.stringify(
@@ -277,10 +314,21 @@ const server = createServer(async (req, res) => {
       if (req.method === "POST") {
         if (!sim) throw Error("Recorded runs cannot be resumed");
         const b = await body(req);
-        if (b.action === "pause" && s.status === "running") s.status = "paused";
-        else if (b.action === "resume" && s.status === "paused")
+        if (b.action === "pause" && s.status === "running") {
+          s.status = "paused";
+          // Finish the current inference/tick before confirming a stable paused state.
+          await activeSteps.get(id);
+          views.set(id, liveView(s));
+        } else if (b.action === "resume" && s.status === "paused")
           s.status = "running";
         else if (
+          b.action === "speed" &&
+          ["running", "paused"].includes(s.status)
+        ) {
+          const errors = validateConfig({ ...s.config, speed: b.speed });
+          if (errors.length) throw Error(errors.join("; "));
+          s.config.speed = b.speed;
+        } else if (
           b.action === "cancel" &&
           (s.status === "running" || s.status === "paused")
         ) {

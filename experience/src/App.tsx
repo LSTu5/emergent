@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import demoManifest from "../../data/demo-manifest.json";
 import { BASELINE, categoryDefaults } from "../../shared/baseline";
-import { clone, upgradeLegacyLayout, validateLayout } from "../../shared/layout";
+import {
+  clone,
+  upgradeLegacyLayout,
+  validateLayout,
+} from "../../shared/layout";
 import {
   findVenuePosition,
   placeVenue,
@@ -24,7 +28,8 @@ import {
 } from "../../shared/contracts";
 import { PierMap, COLORS } from "./Map";
 import { SCENARIOS, scenario } from "../../shared/scenarios";
-import { ComparisonResults } from "./ComparisonResults";
+import { DemandExperiment } from "./DemandExperiment";
+import { renderPolicy } from "./renderer/renderPolicy";
 import "./style.css";
 async function api(path: string, body?: unknown) {
   const r = await fetch(
@@ -48,6 +53,39 @@ async function api(path: string, body?: unknown) {
   }
   if (!r.ok) throw Error(b.error ?? "Request failed");
   return b;
+}
+function mapUpdate(value: any): {
+  runId: string;
+  status: Snapshot["status"];
+  frame: Frame;
+} {
+  if (value.frame) return value;
+  // Older engines return their full snapshot for an unrecognized run subroute.
+  // Keep an in-progress run inspectable while its engine finishes without a restart.
+  const snapshot = value as Snapshot;
+  return {
+    runId: snapshot.id,
+    status: snapshot.status,
+    frame: {
+      time: snapshot.time,
+      metrics: snapshot.metrics,
+      venues: snapshot.venues,
+      traffic: snapshot.traffic,
+      agents: snapshot.agents
+        .filter((a) => a.state !== "pending" && a.state !== "departed")
+        .map((a) => ({
+          id: a.id,
+          ...a.position,
+          state: a.state,
+          nodeId: a.nodeId,
+          route: a.route,
+          remaining: a.remaining,
+          spend: a.spend,
+          target: a.target,
+          history: a.history.slice(-6),
+        })),
+    },
+  };
 }
 const number = (n: number) => Math.round(n).toLocaleString();
 function TimeInput({
@@ -118,7 +156,14 @@ export default function App() {
     [paths, setPaths] = useState(false),
     [pathId, setPathId] = useState("walk-1-4"),
     [heat, setHeat] = useState("none");
-  const [config, setConfig] = useState<Config>(clone(DEFAULT_CONFIG)),
+  const [config, setConfig] = useState<Config>({
+      ...clone(DEFAULT_CONFIG),
+      provider: "rules",
+      visitors: 100,
+      end: 660,
+      hourly: [1],
+      speed: 60,
+    }),
     [health, setHealth] = useState<any>(null),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
@@ -132,19 +177,37 @@ export default function App() {
     [reports, setReports] = useState<Comparison[]>([]),
     [pairs, setPairs] = useState(1),
     [frames, setFrames] = useState<Frame[]>([]),
-    [frameIndex, setFrameIndex] = useState(-1);
+    [frameIndex, setFrameIndex] = useState(-1),
+    [replaySpeed, setReplaySpeed] = useState(60),
+    [liveSupported, setLiveSupported] = useState<boolean | null>(null),
+    [live, setLive] = useState<{
+      runId: string;
+      status: Snapshot["status"];
+      frame: Frame;
+    } | null>(null);
+  const controlRevision = useRef(0);
+  const activeRun = useRef(runId);
+  activeRun.current = runId;
   const editable = layout.id !== BASELINE.id;
   const viewLayout = tab === "simulate" && run ? run.layout : layout;
   const venue = viewLayout.venues.find((v) => v.id === selected);
   const errors = validateLayout(layout);
   const frame = frameIndex >= 0 ? frames[frameIndex] : null;
-  const metrics = frame?.metrics ?? run?.metrics;
+  const visualFrame = frame ?? (live?.runId === runId ? live.frame : null);
+  const metrics = visualFrame?.metrics ?? run?.metrics;
+  const display = renderPolicy(
+    frame ? replaySpeed : (run?.config.speed ?? 60),
+    visualFrame?.agents.length ?? 0,
+    frame ? !replayPlaying : run?.status === "paused",
+  );
   function loadPlanningLayout(source: Layout) {
     const current = upgradeLegacyLayout(source);
     setLayout(clone(current));
     setError("");
     if (current !== source)
-      setNotice("Updated this older layout to the current pier map. Business assumptions are preserved; save a new version to keep it.");
+      setNotice(
+        "Updated this older layout to the current pier map. Business assumptions are preserved; save a new version to keep it.",
+      );
   }
   async function refresh() {
     try {
@@ -166,26 +229,65 @@ export default function App() {
     return () => clearInterval(timer);
   }, []);
   useEffect(() => {
-    if (!runId) return;
+    if (!runId || liveSupported === false) return;
     let alive = true;
-    const poll = () =>
-      api(`/runs/${runId}`)
-        .then((s) => {
-          if (alive) setRun(s);
-        })
-        .catch((e) => {
-          if (alive) setError(e.message);
-        });
+    let timer: ReturnType<typeof setTimeout>;
+    const poll = async () => {
+      const revision = controlRevision.current;
+      try {
+        const value = await api(`/runs/${runId}`);
+        if (alive && revision === controlRevision.current) setRun(value);
+        if (["completed", "failed"].includes(value.status)) return;
+      } catch (e) {
+        if (alive) setError((e as Error).message);
+      }
+      if (alive) timer = setTimeout(poll, 2500);
+    };
     void poll();
-    const t =
-      run?.id === runId && ["completed", "failed"].includes(run.status)
-        ? undefined
-        : setInterval(poll, 1100);
     return () => {
       alive = false;
-      clearInterval(t);
+      clearTimeout(timer);
     };
-  }, [runId, run?.status]);
+  }, [runId, run?.status, liveSupported]);
+  useEffect(() => {
+    if (!runId) return;
+    let alive = true;
+    let timer: ReturnType<typeof setTimeout>;
+    let delay = 300;
+    const poll = async () => {
+      try {
+        const revision = controlRevision.current;
+        const value = await api(`/runs/${runId}/view`);
+        if (!alive) return;
+        if (revision !== controlRevision.current) {
+          timer = setTimeout(poll, delay);
+          return;
+        }
+        const supported = !!value.frame;
+        setLiveSupported(supported);
+        delay = supported ? 300 : 1100;
+        if (!supported) setRun(value);
+        const update = mapUpdate(value);
+        setLive((previous) =>
+          previous &&
+          previous.runId === update.runId &&
+          previous.frame.time === update.frame.time &&
+          previous.status === update.status
+            ? previous
+            : update,
+        );
+        if (["completed", "failed"].includes(update.status)) return;
+      } catch (error) {
+        if (alive) setError((error as Error).message);
+      }
+      if (alive) timer = setTimeout(poll, delay);
+    };
+    void poll();
+    return () => {
+      alive = false;
+      clearTimeout(timer);
+    };
+  }, [runId]);
   useEffect(() => {
     if (!comparison || comparison.status !== "running") return;
     const t = setInterval(() => {
@@ -201,9 +303,14 @@ export default function App() {
       setReplayPlaying(false);
       return;
     }
-    const timer = setTimeout(() => setFrameIndex((i) => i + 1), 500);
+    const delay = Math.max(
+      50,
+      ((frames[frameIndex + 1].time - frames[frameIndex].time) * 60000) /
+        replaySpeed,
+    );
+    const timer = setTimeout(() => setFrameIndex((i) => i + 1), delay);
     return () => clearTimeout(timer);
-  }, [replayPlaying, frameIndex, frames.length, tab]);
+  }, [replayPlaying, frameIndex, frames, replaySpeed, tab]);
   async function act(fn: () => Promise<void>) {
     setBusy(true);
     setError("");
@@ -356,23 +463,28 @@ export default function App() {
     c.hourly = Array.from({ length: count }, (_, i) => config.hourly[i] ?? 3);
     setConfig(c);
   }
-  async function start() {
+  async function start(nextConfig: Config = config) {
     if (errors.length) throw Error(errors[0]);
-    const r = await api("/runs", { layout, config });
+    const r = await api("/runs", { layout, config: nextConfig });
+    setConfig(nextConfig);
     setRunId(r.id);
     setRun(null);
+    setLive(null);
+    setLiveSupported(null);
+    setGuest(null);
+    setReplayPlaying(false);
     setFrameIndex(-1);
     setFrames([]);
     setTab("simulate");
     setNotice(
-      "Simulation started. Visitors arrive throughout the operating window.",
+      "Watching the simulation live. Scroll to zoom, pause at any time, and click a visitor to inspect its state and decisions.",
     );
   }
   async function openRun(id: string) {
     const snapshot: Snapshot = await api(`/runs/${id}`);
     setRun(snapshot);
     setRunId(id);
-    setConfig(clone(snapshot.config));
+    setConfig({ ...clone(snapshot.config), speed: 60 });
     loadPlanningLayout(snapshot.layout);
     setHistory([]);
     setFuture([]);
@@ -380,7 +492,40 @@ export default function App() {
     setFrameIndex(-1);
     setReplayPlaying(false);
     setGuest(null);
+    setLive(null);
+    setLiveSupported(null);
     setTab("simulate");
+    if (["completed", "failed"].includes(snapshot.status)) {
+      const recording = await api(`/runs/${id}/replay`);
+      setFrames(recording.frames);
+      setFrameIndex(
+        Math.max(
+          0,
+          recording.frames.findIndex((f: Frame) => f.agents.length > 0),
+        ),
+      );
+      setReplayPlaying(true);
+    }
+  }
+  async function controlRun(
+    action: "pause" | "resume" | "speed" | "cancel",
+    speed?: number,
+  ) {
+    if (!run) return;
+    const id = run.id;
+    controlRevision.current++;
+    await api(`/runs/${id}`, { action, speed });
+    const [snapshot, view] = await Promise.all([
+      api(`/runs/${id}`),
+      api(`/runs/${id}/view`),
+    ]);
+    if (activeRun.current !== id) return;
+    setRun(snapshot);
+    setLive(mapUpdate(view));
+  }
+  function playRecording() {
+    if (frameIndex >= frames.length - 1) setFrameIndex(0);
+    setReplayPlaying((value) => !value);
   }
   function download(value: unknown, name: string) {
     const url = URL.createObjectURL(
@@ -393,14 +538,25 @@ export default function App() {
     URL.revokeObjectURL(url);
   }
   const liveAgent = run?.agents.find((a) => a.id === guest);
-  const recordedAgent = frame?.agents.find((a) => a.id === guest);
-  const agent = frame
+  const recordedAgent = visualFrame?.agents.find((a) => a.id === guest);
+  const agent = visualFrame
     ? liveAgent && recordedAgent?.remaining !== undefined
-      ? { ...liveAgent, ...recordedAgent, history: recordedAgent.history ?? [] }
-      : undefined
+      ? {
+          ...liveAgent,
+          ...recordedAgent,
+          history:
+            !frame && run?.status === "paused"
+              ? liveAgent.history
+              : (recordedAgent.history ?? []),
+        }
+      : frame
+        ? undefined
+        : liveAgent
     : liveAgent;
-  const st = selected ? (frame?.venues ?? run?.venues)?.[selected] : null;
-  const recordedIds = frame ? new Set(frame.agents.map((a) => a.id)) : null;
+  const st = selected ? (visualFrame?.venues ?? run?.venues)?.[selected] : null;
+  const recordedIds = visualFrame
+    ? new Set(visualFrame.agents.map((a) => a.id))
+    : null;
   const guestList =
     run?.agents.filter(
       (a) =>
@@ -440,6 +596,24 @@ export default function App() {
         </div>
         <div className="title-actions">
           <button
+            disabled={busy}
+            onClick={() =>
+              void act(() =>
+                start({
+                  ...DEFAULT_CONFIG,
+                  provider: "rules",
+                  visitors: 100,
+                  start: 600,
+                  end: 660,
+                  hourly: [1],
+                  speed: 60,
+                }),
+              )
+            }
+          >
+            Quick test · 100 visitors
+          </button>
+          <button
             onClick={() =>
               void act(async () => {
                 await refresh();
@@ -464,7 +638,7 @@ export default function App() {
         {[
           ["plan", "01", "Plan the pier"],
           ["simulate", "02", "Explore a day"],
-          ["compare", "03", "Compare alternatives"],
+          ["compare", "03", "Compare crowds"],
         ].map(([id, n, name]) => (
           <button
             key={id}
@@ -509,7 +683,15 @@ export default function App() {
           </button>
         </div>
       )}
-      <main className={tab === "compare" ? "comparison-workspace" : undefined}>
+      <main
+        className={
+          tab === "compare"
+            ? "comparison-workspace"
+            : tab === "simulate"
+              ? "simulation-workspace"
+              : undefined
+        }
+      >
         <aside className="left-panel">
           <div className="panel-label">
             {tab === "plan" ? "LAYOUT WORKSPACE" : "SIMULATION SETTINGS"}
@@ -612,8 +794,8 @@ export default function App() {
               ＋ Create alternative
             </button>
           )}
-          <details className="scenario-picker">
-            <summary>Management questions</summary>
+          <details className="scenario-picker" hidden={tab !== "plan"}>
+            <summary>Advanced layout scenarios</summary>
             <label>
               Scenario template
               <select
@@ -845,19 +1027,19 @@ export default function App() {
             </label>
           </div>
           <div className="population-presets">
-            <button onClick={() => setConfig({ ...config, visitors: 5000 })}>
-              5,000 · working demo
+            <button onClick={() => setConfig({ ...config, visitors: 100 })}>
+              100 · quick test
             </button>
-            <button onClick={() => setConfig({ ...config, visitors: 30000 })}>
-              30,000 · demand stress
+            <button onClick={() => setConfig({ ...config, visitors: 1000 })}>
+              1,000 · larger test
             </button>
           </div>
           <details>
             <summary>Population scale & arrival access</summary>
             <p className="hint">
               Every visitor is modeled in a group. Dollars are never multiplied
-              from a smaller sample. The 5,000-person default is a working
-              scenario, not a claim about daily attendance.
+              from a smaller sample. Start with 100 visitors and use Compare
+              crowds for matched full-day tests with 100–2,000 visitors.
             </p>
             <p className="hint">
               <a
@@ -972,7 +1154,8 @@ export default function App() {
                   setConfig({ ...config, speed: +e.target.value })
                 }
               >
-                <option value={60}>60×</option>
+                <option value={15}>15× · close inspection</option>
+                <option value={60}>60× · watch live</option>
                 <option value={600}>600×</option>
                 <option value={100000}>As fast as possible</option>
               </select>
@@ -1017,123 +1200,10 @@ export default function App() {
           </p>
         </aside>
         <section className="workspace">
-          {tab === "compare" ? (
-            <div className="comparison">
-              <p className="eyebrow">TEST THE CHANGE, KEEP THE CROWD</p>
-              <h2>Would your alternative work better?</h2>
-              <p>
-                Compare the current pier with <b>{layout.name}</b>. Each pair
-                receives identical visitor profiles, budgets and arrival
-                schedules.
-              </p>
-              <div className="comparison-cards">
-                <div>
-                  <span>A · BASELINE</span>
-                  <h3>Current PIER 39</h3>
-                  <p>{BASELINE.venues.length} modeled destinations</p>
-                </div>
-                <div>
-                  <span>B · ALTERNATIVE</span>
-                  <h3>{layout.name}</h3>
-                  <p>
-                    {layout.venues.length} modeled destinations · revision{" "}
-                    {layout.revision}
-                  </p>
-                </div>
-              </div>
-              <div className="button-row">
-                <select
-                  aria-label="Comparison pairs"
-                  value={pairs}
-                  onChange={(e) => setPairs(+e.target.value)}
-                >
-                  <option value={1}>One pair · illustrative</option>
-                  <option value={3}>Three pairs · show variation</option>
-                </select>
-                <button
-                  className="primary"
-                  disabled={
-                    busy ||
-                    !health?.providers?.[config.provider] ||
-                    comparison?.status === "running"
-                  }
-                  onClick={() =>
-                    void act(async () => {
-                      if (errors.length) throw Error(errors[0]);
-                      const c = await api("/comparisons", {
-                        baseline: BASELINE,
-                        variant: layout,
-                        config,
-                        pairs,
-                      });
-                      setComparison(c);
-                    })
-                  }
-                >
-                  Run comparison
-                </button>
-              </div>
-              <label>
-                Saved comparisons
-                <select
-                  aria-label="Saved comparisons"
-                  value={comparison?.id ?? ""}
-                  onFocus={() => void api("/comparisons").then(setReports)}
-                  onChange={(e) => {
-                    const report = reports.find((r) => r.id === e.target.value);
-                    if (report) {
-                      setComparison(report);
-                      loadPlanningLayout(report.variant);
-                      setConfig(clone(report.config));
-                      setPairs(report.pairs.length);
-                      setHistory([]);
-                      setFuture([]);
-                      setNotice(
-                        "Loaded the recorded experiment and its settings.",
-                      );
-                    }
-                  }}
-                >
-                  <option value="">Select a recorded comparison</option>
-                  {[
-                    ...reports,
-                    ...(comparison &&
-                    !reports.some((r) => r.id === comparison.id)
-                      ? [comparison]
-                      : []),
-                  ].map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.variant.name} · {c.pairs.length} pair(s) · {c.status}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              {comparison && (
-                <>
-                  <ComparisonResults
-                    comparison={comparison}
-                    inspect={(id) => void act(() => openRun(id))}
-                  />
-                  <button
-                    onClick={() =>
-                      download(comparison, "pier39-comparison.json")
-                    }
-                  >
-                    Export comparison
-                  </button>
-                </>
-              )}
-              <div className="assumptions">
-                <b>How to read these results</b>
-                <p>
-                  Visitor spending is business sales, not management income.
-                  These runs test stated behavioral and operating assumptions.
-                  Failed pairs stay visible and are excluded from completed-pair
-                  summaries.
-                </p>
-              </div>
-            </div>
-          ) : (
+          <div hidden={tab !== "compare"}>
+            <DemandExperiment open={(id) => void act(() => openRun(id))} />
+          </div>
+          {tab === "compare" ? null : (
             <>
               <div className="map-toolbar">
                 <div className="floor-toggle" aria-label="Pier levels">
@@ -1165,7 +1235,7 @@ export default function App() {
                       ? "Alternative · editable"
                       : "Current layout · read only"
                     : run
-                      ? `${clock(frame?.time ?? run.time)} · ${run.status}`
+                      ? `${clock(visualFrame?.time ?? run.time)} · ${run.status}`
                       : "Start a simulation to explore a day"}
                 </span>
                 <select
@@ -1239,6 +1309,116 @@ export default function App() {
                   </>
                 )}
               </div>
+              {tab === "simulate" && run && (
+                <div className="live-controls" aria-label="Simulation controls">
+                  <button
+                    className="primary"
+                    disabled={
+                      busy ||
+                      (!frame && !["running", "paused"].includes(run.status))
+                    }
+                    onClick={() =>
+                      frame
+                        ? playRecording()
+                        : void act(() =>
+                            controlRun(
+                              run.status === "paused" ? "resume" : "pause",
+                            ),
+                          )
+                    }
+                  >
+                    {frame
+                      ? replayPlaying
+                        ? "Pause playback"
+                        : "Play playback"
+                      : run.status === "paused"
+                        ? "Resume simulation"
+                        : "Pause simulation"}
+                  </button>
+                  {!frame && ["running", "paused"].includes(run.status) && (
+                    <button
+                      disabled={busy}
+                      onClick={() => void act(() => controlRun("cancel"))}
+                    >
+                      Stop run
+                    </button>
+                  )}
+                  <strong>{clock(visualFrame?.time ?? run.time)}</strong>
+                  <span className="live-state">
+                    {frame
+                      ? "Recording"
+                      : run.status === "paused"
+                        ? "Paused · inspect freely"
+                        : run.status === "running"
+                          ? "Live"
+                          : run.status}
+                  </span>
+                  {liveSupported === false && !frame ? (
+                    <span>{number(run.achievedSpeed)}× achieved</span>
+                  ) : (
+                    <label>
+                      Speed{" "}
+                      <select
+                        aria-label={
+                          frame ? "Playback speed" : "Live simulation speed"
+                        }
+                        disabled={
+                          busy ||
+                          (!frame &&
+                            !["running", "paused"].includes(run.status))
+                        }
+                        value={frame ? replaySpeed : run.config.speed}
+                        onChange={(e) =>
+                          frame
+                            ? setReplaySpeed(+e.target.value)
+                            : void act(() =>
+                                controlRun("speed", +e.target.value),
+                              )
+                        }
+                      >
+                        <option value={1}>1× · real time</option>
+                        <option value={15}>15×</option>
+                        <option value={60}>60×</option>
+                        <option value={300}>300×</option>
+                        <option value={600}>600×</option>
+                        <option value={1200}>1,200×</option>
+                        {!frame && <option value={100000}>Fastest</option>}
+                      </select>
+                    </label>
+                  )}
+                  <input
+                    aria-label="Search groups"
+                    placeholder="Find group or visit purpose"
+                    value={guestSearch}
+                    onChange={(e) => setGuestSearch(e.target.value)}
+                  />
+                  <select
+                    aria-label="Inspect visitor"
+                    value={guest ?? ""}
+                    onChange={(e) => setGuest(e.target.value || null)}
+                  >
+                    <option value="">Inspect a visitor…</option>
+                    {guestList.slice(0, 100).map((a) => (
+                      <option key={a.id} value={a.id}>
+                        {a.id} · {a.purpose}
+                      </option>
+                    ))}
+                    {guest &&
+                      !guestList.slice(0, 100).some((a) => a.id === guest) && (
+                        <option value={guest}>
+                          {guest} · no longer on pier
+                        </option>
+                      )}
+                  </select>
+                  <small>
+                    {visualFrame?.agents.length ?? 0} groups on pier · click a
+                    person to inspect ·{" "}
+                    {display.overview
+                      ? "Overview mode: crowd animation off at high speed or density. Pause to inspect."
+                      : "Up to 300 groups drawn; all visitors included in metrics."}
+                  </small>
+                </div>
+              )}
               <PierMap
                 layout={viewLayout}
                 floor={floor}
@@ -1249,7 +1429,11 @@ export default function App() {
                 }}
                 selected={selected}
                 run={tab === "simulate" ? run : null}
-                frame={tab === "simulate" ? frame : null}
+                frame={tab === "simulate" ? visualFrame : null}
+                selectedGuest={tab === "simulate" ? guest : null}
+                overview={display.overview}
+                recorded={!!frame}
+                playing={replayPlaying}
                 heat={heat}
                 editable={tab === "plan" && editable}
                 paths={paths && tab === "plan"}
@@ -1281,20 +1465,6 @@ export default function App() {
               {tab === "simulate" && run && (
                 <div className="playback">
                   <div>
-                    <button
-                      onClick={() =>
-                        void act(async () => {
-                          await api(`/runs/${run.id}`, {
-                            action:
-                              run.status === "paused" ? "resume" : "pause",
-                          });
-                        })
-                      }
-                      disabled={!["running", "paused"].includes(run.status)}
-                    >
-                      {run.status === "paused" ? "▶ Resume" : "Ⅱ Pause"}
-                    </button>
-                    <strong>{clock(frame?.time ?? run.time)}</strong>
                     <span>
                       {number(run.achievedSpeed)}× achieved · {run.model}
                     </span>
@@ -1311,7 +1481,7 @@ export default function App() {
                       Replay
                     </button>
                     {frames.length > 0 && (
-                      <button onClick={() => setReplayPlaying(!replayPlaying)}>
+                      <button onClick={playRecording}>
                         {replayPlaying ? "Pause recording" : "Play recording"}
                       </button>
                     )}
@@ -1364,7 +1534,19 @@ export default function App() {
           )}
         </section>
         <aside className="right-panel">
-          {tab === "simulate" && metrics ? (
+          {tab === "simulate" && metrics && guest && (
+            <div className="metric-grid">
+              <div>
+                <b>{money(metrics.sales)}</b>
+                <span>Total revenue</span>
+              </div>
+              <div>
+                <b>{metrics.arrived}</b>
+                <span>Arrived visitors</span>
+              </div>
+            </div>
+          )}
+          {tab === "simulate" && metrics && !guest ? (
             <>
               <div className="panel-label">
                 {frame ? "RECORDED OUTCOMES" : "DAY AT A GLANCE"}
@@ -1468,6 +1650,20 @@ export default function App() {
             <>
               <div className="panel-label">VISITOR GROUP</div>
               <h2>{agent.purpose}</h2>
+              <p className="agent-id">
+                {agent.id} · Level{" "}
+                {recordedAgent?.floor ?? agent.position.floor}
+                {!frame && run?.status === "paused" ? " · paused" : ""}
+              </p>
+              <p>
+                {agent.state === "visiting" ? "At" : "Heading to"}{" "}
+                {agent.target
+                  ? (viewLayout.venues.find((v) => v.id === agent.target)
+                      ?.name ?? agent.target)
+                  : agent.departing
+                    ? "the exit"
+                    : "choosing the next stop"}
+              </p>
               <p>
                 {agent.size} visitors · {agent.state} ·{" "}
                 {agent.mode === "car" ? "car group" : "walk / transit"}
@@ -1799,7 +1995,7 @@ export default function App() {
                   onClick={() => {
                     setGuest(a.id);
                     setFloor(
-                      frame?.agents.find((r) => r.id === a.id)?.floor ??
+                      visualFrame?.agents.find((r) => r.id === a.id)?.floor ??
                         a.position.floor,
                     );
                   }}
@@ -1807,7 +2003,8 @@ export default function App() {
                   {a.id}
                   <small>
                     {a.purpose} ·{" "}
-                    {frame?.agents.find((r) => r.id === a.id)?.state ?? a.state}
+                    {visualFrame?.agents.find((r) => r.id === a.id)?.state ??
+                      a.state}
                   </small>
                 </button>
               ))}

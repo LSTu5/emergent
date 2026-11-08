@@ -254,3 +254,32 @@ test("zero-budget retail browsing creates visits without purchases and replay wa
   assert.ok(Array.isArray(recorded?.history));
   assert.ok(sim.frames.every((f) => f.traffic));
 });
+
+test("same-pier 1000/2000 demand tests produce reconciled sales and visits on both levels", async () => {
+  const results = [];
+  for (const visitors of [1000, 2000]) {
+    const s = await complete(
+      new Simulation(
+        `demand-${visitors}`,
+        BASELINE,
+        { ...cfg, visitors, hourly: Array(11).fill(1), seed: "crowd-test-1" },
+        rules,
+      ),
+    );
+    assert.equal(s.metrics.arrived, visitors);
+    assert.equal(s.metrics.departed, visitors);
+    assert.equal(
+      s.metrics.sales,
+      s.agents.reduce((total, a) => total + a.spend, 0),
+    );
+    for (const floor of [1, 2])
+      assert.ok(
+        s.layout.venues
+          .filter((v) => v.floor === floor)
+          .reduce((n, v) => n + s.venues[v.id].visits, 0) > 0,
+      );
+    results.push(s.metrics.sales);
+  }
+  // A broad regression bound for this fixed seed, not a promised economic multiplier.
+  assert.ok(results[1] > results[0] * 1.5);
+});

@@ -36,6 +36,8 @@ Ports: Experience **4320**, Engine **4321**, SpacetimeDB **4322**, Laya **4318**
 
 In **Plan the pier**, create an alternative before editing. New kiosks, seating and event areas are placed in a clear, accessible space automatically. Drag the object or its label: green marks a valid position, red explains a blocked position, and an invalid drop leaves the object where it was. For an older draft with overlapping objects, **Find clear positions for objects** repairs movable placements while preserving business assumptions; the repair can be undone.
 
+Interactive runs start at **60×** so the day is watchable. Use **Pause simulation** above the map, scroll or use +/− to zoom, and click a person or choose **Inspect visitor**. The inspector shows the group ID, state, destination, wallet and recorded decisions. **Center visitor** brings that group into close view; camera position and selection survive live updates. A person marker represents a modeled visitor group. Resume continues the same run, and the live speed selector changes its pace. Opening a completed run starts recorded playback automatically, with separate playback speed and pause controls.
+
 A live local-AI run can take minutes. Achieved speed is displayed; replay is the immediate demo path. The rules provider is faster and explicitly labeled. Geometry is frozen per run, so later edits apply to a new simulation. Saved layouts, reports and runs survive restart. Failed or interrupted pairs remain visible and are excluded from completed-pair summaries.
 
 ## Useful management questions
@@ -110,3 +112,13 @@ Real-service tests require the local stack. They save and reload alternatives, c
 ## Dependencies
 
 Open-source frameworks and the separately downloaded Laya model retain their own licenses. See [third-party dependencies](THIRD_PARTY.md).
+
+### Quick simulation checks
+
+Use **Quick test · 100 visitors** to watch a short rules-driven run. Pause above the map, search/select a visitor group, and use **Center visitor** or scroll to zoom. The inspector shows its destination, budget and recent decisions; the selected route is drawn on the boardwalk. These are group markers, not one sprite per customer.
+
+**Compare crowds** runs the current baseline twice, sequentially, with the same seed, prices and operating hours (10:00–21:00). Change only visitor counts and arrival profiles. Start with **100 vs 200**; **1,000 vs 2,000** is available for a larger test. Results show sales, per-visitor spending and visits on both floors. The latest experiment is retained in this browser; if the page closes between runs, reopen it to launch the queued run. Rules-mode estimates are illustrative, not calibrated revenue forecasts.
+
+To keep inspection responsive, animation switches off above 120× or 300 active groups. Pause to inspect a maximum of 300 markers, including the selected group; all visitors remain in the metrics. Static pier scenery is reused between updates, polling does not overlap, and map rendering errors offer a reload action without stopping server-side runs. Recorded playback uses the stored five-minute snapshots; it is not a continuous motion recording.
+
+The boardwalk is a schematic, not a surveyed replica: path widths now render in ground units, the entrance has an open connection to the plaza, terrace furniture avoids tenant footprints, and the upper deck follows the connected promenade and tenant bays. Fixed navigation geometry and saved-layout migration remain validated.

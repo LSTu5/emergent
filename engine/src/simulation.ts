@@ -638,6 +638,8 @@ export class Simulation {
           id: a.id,
           ...a.position,
           state: a.state,
+          nodeId: a.nodeId,
+          route: [...a.route],
           remaining: a.remaining,
           spend: a.spend,
           target: a.target,

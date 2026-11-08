@@ -135,40 +135,82 @@ export function environment(
       "700",
     );
   }
-  // The same fixed rectangular planning boundary is retained; perimeter framing is illustrative.
-  d.box(8, 22, 138, 280, -3, 3, 0x74604c, 0xc6ad86);
-  for (let y = 23; y < 302; y += 2.1) {
-    const tint = y % 4 < 2 ? 0xb39a78 : 0xd4bd98;
-    d.line(
-      [
-        [8, y, 0.08],
-        [146, y, 0.08],
-      ],
-      tint,
-      0.35,
-      0.8,
-    );
-    for (let x = 8 + (Math.floor(y) % 3) * 12; x < 146; x += 30)
+  // Upper galleries follow the circulation spine and tenant bays, rather than
+  // duplicating the entire ground-floor slab. All actual routes remain on deck.
+  const terraces = [38, 110, 182, 230].filter(
+    (y) =>
+      !layout.venues.some(
+        (v) =>
+          v.floor === 2 &&
+          v.x < 130 &&
+          v.x + v.w > 91 &&
+          v.y < y + 15 &&
+          v.y + v.h > y,
+      ),
+  );
+  const deck = (x: number, y: number, w: number, h: number) => {
+    d.box(x, y, w, h, -3, 3, 0x74604c, 0xc6ad86);
+    for (let py = y + 1; py < y + h; py += 2.1)
       d.line(
         [
-          [x, y, 0.09],
-          [x, y + 2, 0.09],
+          [x, py, 0.08],
+          [x + w, py, 0.08],
         ],
-        0x927b61,
-        0.2,
-        0.45,
+        0xb39a78,
+        0.35,
+        0.65,
       );
-  }
-  d.rail(8, 22, 138, 280);
-  for (let y = 30; y < 300; y += 15) {
-    d.box(8, y, 1, 1, -4, 4, 0x594b3d);
-    d.box(145, y, 1, 1, -4, 4, 0x594b3d);
+  };
+  if (floor === 1) {
+    deck(8, 22, 138, 280);
+    d.rail(8, 22, 1, 280);
+    d.rail(145, 22, 1, 280);
+    d.rail(8, 22, 138, 1);
+    d.rail(8, 301, 58, 1);
+    d.rail(86, 301, 60, 1);
+    d.box(66, 300, 20, 13, -1, 1, 0xbaa580, 0xd8c29c);
+    for (let y = 30; y < 300; y += 15) {
+      d.box(8, y, 1, 1, -4, 4, 0x594b3d);
+      d.box(145, y, 1, 1, -4, 4, 0x594b3d);
+    }
+  } else {
+    const bays = layout.venues.filter((v) => v.floor === 2);
+    for (const v of bays) {
+      // A bay includes its connection to the promenade, including edited amenities.
+      const left = Math.min(v.x, 58),
+        right = Math.max(v.x + v.w, 94);
+      if (left < 58) deck(left, v.y, 58 - left, v.h);
+      if (right > 94) deck(94, v.y, right - 94, v.h);
+      d.rail(v.x < 76 ? left : right, v.y, 0.5, v.h);
+    }
+    for (const y of terraces) deck(94, y, 36, 15);
+    deck(58, 22, 36, 280);
+    for (const x of [58, 94]) {
+      let start: number | null = null;
+      for (let y = 22; y <= 302; y++) {
+        const opening =
+          bays.some(
+            (v) =>
+              v.y <= y &&
+              v.y + v.h >= y &&
+              (x === 58 ? v.x < 58 : v.x + v.w > 94),
+          ) ||
+          (x === 94 && terraces.some((t) => t <= y && t + 15 >= y));
+        if (!opening && y < 302) start ??= y;
+        else if (start !== null) {
+          d.rail(x, start, 0.5, y - start);
+          start = null;
+        }
+      }
+    }
+    d.rail(58, 22, 36, 0.5);
+    d.rail(58, 301, 36, 0.5);
   }
   if (floor === 2) {
     // Visible open terraces distinguish the upper promenade from enclosed tenant spaces.
-    for (const y of [92, 140, 188, 236]) {
+    for (const y of terraces) {
       d.box(91, y, 39, 15, 0.1, 0.25, 0xbaa687, 0xd8c8a6);
-      d.rail(91, y, 39, 15, 0.4);
+      d.rail(129, y, 1, 15, 0.4);
       for (let x = 98; x < 126; x += 11) {
         d.cylinder(x, y + 8, 2.2, 0.5, 0.9, 0x85745c);
         d.line(

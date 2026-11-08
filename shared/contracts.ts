@@ -207,6 +207,8 @@ export interface Frame {
     y: number;
     floor: Floor;
     state: Agent["state"];
+    nodeId?: string;
+    route?: string[];
     remaining?: number;
     spend?: number;
     target?: string | null;

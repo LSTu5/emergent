@@ -1092,3 +1092,80 @@ main.comparison-workspace .comparison {
     max-width: 100%;
   }
 }
+
+.live-controls {
+  position: sticky;
+  top: 8px;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 12px 16px;
+  background: #f5f8f2;
+  border-block: 1px solid #d6e0d3;
+  box-shadow: 0 3px 12px #183d4610;
+}
+.live-controls label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+.live-controls select {
+  width: auto;
+  max-width: 230px;
+  margin: 0;
+}
+.live-controls small {
+  width: 100%;
+  color: #587161;
+}
+.live-state {
+  font-size: 11px;
+  color: #416249;
+}
+.agent-id {
+  font-family: monospace;
+  color: #416249;
+}
+
+.simulation-workspace > .right-panel {
+  position: sticky;
+  top: 8px;
+  align-self: start;
+  min-height: 0;
+  max-height: calc(100vh - 16px);
+}
+
+.demand-test table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+.demand-test td,
+.demand-test th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #d6e0d3;
+}
+.live-controls input {
+  max-width: 210px;
+}
+
+.map-error {
+  position: absolute;
+  z-index: 10;
+  inset: 30% 10% auto;
+  padding: 24px;
+  background: #fff4dd;
+  border: 1px solid #b8774e;
+  border-radius: 10px;
+}
+
+main.comparison-workspace {
+  grid-template-columns: minmax(0, 1fr);
+}
+main.comparison-workspace > .left-panel {
+  display: none;
+}

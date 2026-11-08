@@ -6,6 +6,7 @@ import {
   Rectangle,
   type FederatedPointerEvent,
 } from "pixi.js";
+import { VisitorMotion, visitorStyle } from "./renderer/visitorMotion";
 import { placeVenue } from "../../shared/editing";
 import type {
   Layout,
@@ -32,6 +33,10 @@ interface Props {
   selected: string | null;
   run: Snapshot | null;
   frame: Frame | null;
+  selectedGuest: string | null;
+  recorded: boolean;
+  playing: boolean;
+  overview: boolean;
   heat: string;
   editable: boolean;
   paths: boolean;
@@ -47,6 +52,8 @@ export function PierMap(p: Props) {
     props = useRef(p),
     camera = useRef({ zoom: 1, x: 0, y: 0 });
   props.current = p;
+  const [mapError, setMapError] = useState("");
+  const [attempt, setAttempt] = useState(0);
   const [hover, setHover] = useState<string | null>(null);
   const [dragFeedback, setDragFeedback] = useState<{
     text: string;
@@ -61,6 +68,103 @@ export function PierMap(p: Props) {
     let dead = false,
       resize: ResizeObserver;
     let render = () => {};
+    let sceneKey = "";
+    let layers: {
+      models: Container;
+      floor: Floor;
+      scale: number;
+      trail: Graphics;
+    }[] = [];
+    const motion = new VisitorMotion();
+    let sprites: {
+      id: string;
+      graphic: Graphics;
+      x: number;
+      y: number;
+      selected: boolean;
+    }[] = [];
+    const drawVisitors = (p: Props, visitors: Frame["agents"]) => {
+      for (const sprite of sprites)
+        if (!sprite.graphic.destroyed)
+          sprite.graphic.destroy({ children: true });
+      sprites = [];
+      for (const { models, floor, scale, trail } of layers) {
+        trail.clear();
+        const selected = visitors.find((a) => a.id === p.selectedGuest);
+        if (selected) {
+          const points = [
+            selected,
+            ...(selected.route ?? [])
+              .map((id) => p.layout.nodes.find((n) => n.id === id))
+              .filter((n): n is NonNullable<typeof n> => !!n),
+          ];
+          for (let i = 1; i < points.length; i++) {
+            const a = points[i - 1],
+              b = points[i];
+            if (a.floor === floor && b.floor === floor)
+              new Draw(trail).line(
+                [
+                  [a.x, a.y, 0.5],
+                  [b.x, b.y, 0.5],
+                ],
+                0x216b79,
+                2 / scale,
+                0.9,
+              );
+          }
+        }
+        for (const a of visitors.filter((a) => a.floor === floor)) {
+          const style = visitorStyle(a.id),
+            g = new Graphics();
+          const selected = a.id === p.selectedGuest;
+          if (selected)
+            g.ellipse(0, 0, 4, 2)
+              .fill({ color: 0xffe3a1, alpha: 0.8 })
+              .stroke({ color: 0x183d46, width: 0.8 });
+          g.ellipse(1, 1, 1.6, 0.7).fill({ color: 0x234952, alpha: 0.25 });
+          g.roundRect(-0.65, -2, 1.3, 2.1, 0.4).fill(
+            a.state === "waiting" ? 0xc9673c : style.color,
+          );
+          g.circle(0, -2.7, 0.7).fill(0xd6b28c);
+          // Keep people and their hit areas usable even in the whole-pier view.
+          g.scale.set(Math.max(1, 1.6 / scale));
+          g.hitArea = new Rectangle(-4, -7, 8, 10);
+          g.eventMode = "static";
+          g.cursor = "pointer";
+          g.on("pointerdown", (event: FederatedPointerEvent) =>
+            event.stopPropagation(),
+          );
+          g.on("pointertap", () => props.current.onGuest(a.id));
+          g.on("pointerover", () =>
+            setHover(`${a.id} · ${a.state} · click to inspect`),
+          );
+          g.on("pointerout", () => setHover(null));
+          if (selected) label(g, a.id, 0, -9, 4.5, 0x163d46, "700");
+          models.addChild(g);
+          sprites.push({
+            id: a.id,
+            graphic: g,
+            x: style.x,
+            y: style.y,
+            selected,
+          });
+        }
+      }
+    };
+    let removeWheel = () => {};
+    let removeContextListener = () => {};
+    let focusPending = false;
+    const animate = () => {
+      const now = performance.now();
+      for (const sprite of sprites) {
+        const point = motion.point(sprite.id, now);
+        if (!point) continue;
+        const q = project(point.x + sprite.x, point.y + sprite.y, 0.3);
+        sprite.graphic.position.set(q.x, q.y);
+        sprite.graphic.zIndex =
+          point.x + point.y + (sprite.selected ? 10000 : 1);
+      }
+    };
     let cancelDrag: (() => void) | null = null;
     void app
       .init({
@@ -77,6 +181,17 @@ export function PierMap(p: Props) {
         }
         host.current!.appendChild(app.canvas);
         appRef.current = app;
+        const lost = () => {
+          if (!dead) {
+            app.stop();
+            setMapError(
+              "The map renderer stopped. Your simulation is still running; reload the map to continue inspecting.",
+            );
+          }
+        };
+        app.canvas.addEventListener("webglcontextlost", lost);
+        removeContextListener = () =>
+          app.canvas.removeEventListener("webglcontextlost", lost);
         app.stage.eventMode = "static";
         app.stage.hitArea = new Rectangle(
           0,
@@ -108,9 +223,119 @@ export function PierMap(p: Props) {
         app.stage.on("pointerupoutside", () => {
           pan = null;
         });
-        render = () => {
-          if ((app as any).dragging) return;
+        const wheel = (event: WheelEvent) => {
+          event.preventDefault();
+          if ((app as any).dragging || dead || app.stage.destroyed) return;
+          const bounds = app.canvas.getBoundingClientRect();
+          const px =
+            ((event.clientX - bounds.left) * app.screen.width) / bounds.width -
+            app.screen.width / 2;
+          const py =
+            ((event.clientY - bounds.top) * app.screen.height) / bounds.height -
+            app.screen.height / 2 -
+            12;
+          const next = Math.max(
+            0.8,
+            Math.min(10, camera.current.zoom * Math.exp(-event.deltaY * 0.002)),
+          );
+          const factor = next / camera.current.zoom;
+          camera.current.x = px - (px - camera.current.x) * factor;
+          camera.current.y = py - (py - camera.current.y) * factor;
+          camera.current.zoom = next;
+          render();
+        };
+        app.canvas.addEventListener("wheel", wheel, { passive: false });
+        removeWheel = () => app.canvas.removeEventListener("wheel", wheel);
+        app.ticker.add(animate);
+        (app as any).focusGuest = () => {
           const p = props.current;
+          const agent =
+            p.frame?.agents.find((a) => a.id === p.selectedGuest) ??
+            p.run?.agents.find((a) => a.id === p.selectedGuest);
+          if (!agent) return;
+          const point = "position" in agent ? agent.position : agent;
+          if (!p.both && p.floor !== point.floor) {
+            focusPending = true;
+            p.onFloor(point.floor);
+            return;
+          }
+          focusPending = false;
+          const pane = sceneFrames(p.both, p.floor).find(
+            (pane) => pane.floor === point.floor,
+          )!;
+          const sceneW = p.both ? 570 : 545,
+            sceneH = p.both ? 575 : 290;
+          camera.current.zoom = Math.max(4, camera.current.zoom);
+          const scale =
+            Math.min(
+              (app.screen.width - 40) / sceneW,
+              (app.screen.height - 75) / sceneH,
+            ) * camera.current.zoom;
+          const q = project(point.x, point.y);
+          camera.current.x = (sceneW / 2 - pane.x - q.x) * scale;
+          camera.current.y = (sceneH / 2 - pane.y - q.y) * scale;
+          render();
+        };
+        render = () => {
+          if (dead || app.stage.destroyed || (app as any).dragging) return;
+          const p = props.current;
+          const stats = p.frame?.venues ?? p.run?.venues,
+            traffic = p.frame ? p.frame.traffic : p.run?.traffic;
+          const allVisitors =
+            p.frame?.agents ??
+            p.run?.agents
+              .filter((a) => a.state !== "pending" && a.state !== "departed")
+              .map((a) => ({
+                id: a.id,
+                ...a.position,
+                state: a.state,
+                nodeId: a.nodeId,
+                route: a.route,
+                target: a.target,
+              })) ??
+            [];
+          const visitors: Frame["agents"] = p.overview
+            ? []
+            : allVisitors.slice(0, 300);
+          const chosen = allVisitors.find((a) => a.id === p.selectedGuest);
+          if (
+            !p.overview &&
+            chosen &&
+            !visitors.some((a) => a.id === chosen.id)
+          ) {
+            if (visitors.length === 300) visitors.pop();
+            visitors.push(chosen);
+          }
+          motion.update(
+            `${p.run?.id ?? "none"}:${p.recorded ? "recorded" : "live"}`,
+            p.layout,
+            visitors,
+            p.frame?.time ?? p.run?.time ?? 0,
+            p.recorded ? !p.playing : p.run?.status !== "running",
+            performance.now(),
+          );
+          const key = JSON.stringify([
+            p.layout,
+            p.floor,
+            p.both,
+            p.selected,
+            p.selectedGuest,
+            p.heat,
+            p.editable,
+            p.paths,
+            camera.current,
+            app.screen.width,
+            app.screen.height,
+            p.heat !== "none" ? stats : null,
+          ]);
+          if (key === sceneKey) {
+            drawVisitors(p, visitors);
+            animate();
+            return;
+          }
+          sceneKey = key;
+          sprites = [];
+          layers = [];
           app.stage
             .removeChildren()
             .forEach((c) => c.destroy({ children: true }));
@@ -151,14 +376,6 @@ export function PierMap(p: Props) {
           root.position.set(ox, oy);
           root.scale.set(scale);
           app.stage.addChild(root);
-          const stats = p.frame?.venues ?? p.run?.venues,
-            traffic = p.frame ? p.frame.traffic : p.run?.traffic;
-          const visitors =
-            p.frame?.agents ??
-            p.run?.agents
-              .filter((a) => a.state !== "pending" && a.state !== "departed")
-              .map((a) => ({ id: a.id, ...a.position, state: a.state })) ??
-            [];
           const maxSales = Math.max(
             1,
             ...Object.values(stats ?? {}).map((v) => v.sales),
@@ -206,14 +423,20 @@ export function PierMap(p: Props) {
               const a = p.layout.nodes.find((n) => n.id === e.from)!,
                 b = p.layout.nodes.find((n) => n.id === e.to)!;
               if (a.floor !== pane.floor || b.floor !== pane.floor) continue;
-              d.line(
+              const dx = b.x - a.x,
+                dy = b.y - a.y,
+                len = Math.hypot(dx, dy) || 1;
+              const nx = ((-dy / len) * e.width) / 2,
+                ny = ((dx / len) * e.width) / 2;
+              d.poly(
                 [
-                  [a.x, a.y, 0.15],
-                  [b.x, b.y, 0.15],
+                  [a.x + nx, a.y + ny, 0.15],
+                  [b.x + nx, b.y + ny, 0.15],
+                  [b.x - nx, b.y - ny, 0.15],
+                  [a.x - nx, a.y - ny, 0.15],
                 ],
-                e.enabled ? (p.paths ? 0x83b6aa : 0xdfcba8) : 0xbf6a4d,
-                Math.min(8, e.width),
-                e.enabled ? 0.7 : 0.9,
+                e.enabled ? (p.paths ? 0x83b6aa : 0xead5b0) : 0xbf6a4d,
+                e.enabled ? (p.paths ? 0.9 : 0.22) : 0.6,
               );
               if (p.paths && !e.structural) {
                 const hit = new Graphics(),
@@ -245,9 +468,12 @@ export function PierMap(p: Props) {
                   });
               }
             }
+            const trail = new Graphics();
+            world.addChild(trail);
             const models = new Container();
             models.sortableChildren = true;
             world.addChild(models);
+            layers.push({ models, floor: pane.floor, scale, trail });
             const overlay = new Container();
             overlay.sortableChildren = true;
             for (const v of p.layout.venues.filter(
@@ -484,34 +710,11 @@ export function PierMap(p: Props) {
                 props.current.onFloor(pane.floor === 1 ? 2 : 1),
               );
             }
-            for (const [i, a] of visitors
-              .filter((a) => a.floor === pane.floor)
-              .entries()) {
-              const q = project(
-                  a.x + ((i % 3) - 1) * 0.8,
-                  a.y + ((i % 5) - 2) * 0.6,
-                  0.3,
-                ),
-                g = new Graphics();
-              g.ellipse(q.x + 1, q.y + 1, 1.6, 0.7).fill({
-                color: 0x234952,
-                alpha: 0.25,
-              });
-              g.roundRect(q.x - 0.65, q.y - 2, 1.3, 2.1, 0.4).fill(
-                a.state === "waiting"
-                  ? 0xc9673c
-                  : [0x2d6d79, 0x925442, 0x465e4f][i % 3],
-              );
-              g.circle(q.x, q.y - 2.7, 0.7).fill(0xd6b28c);
-              g.zIndex = a.x + a.y + 1;
-              g.hitArea = new Rectangle(q.x - 3, q.y - 5, 6, 8);
-              g.eventMode = "static";
-              g.cursor = "pointer";
-              g.on("pointertap", () => props.current.onGuest(a.id));
-              models.addChild(g);
-            }
             world.addChild(overlay);
           }
+          drawVisitors(p, visitors);
+          animate();
+          if (focusPending) (app as any).focusGuest?.();
         };
         render();
         resize = new ResizeObserver(() => {
@@ -520,20 +723,29 @@ export function PierMap(p: Props) {
         });
         resize.observe(host.current!);
         (app as any).redraw = render;
+      })
+      .catch((error: Error) => {
+        if (!dead) setMapError(`Unable to draw the pier: ${error.message}`);
       });
     return () => {
       cancelDrag?.();
+      removeWheel();
+      removeContextListener();
       dead = true;
       resize?.disconnect();
       appRef.current = null;
       if (app.renderer) app.destroy(true, { children: true });
     };
-  }, []);
+  }, [attempt]);
   useEffect(() => {
     (appRef.current as any)?.redraw?.();
   }, [p]);
   function zoom(by: number) {
-    camera.current.zoom = Math.max(0.8, Math.min(3, camera.current.zoom * by));
+    const next = Math.max(0.8, Math.min(10, camera.current.zoom * by));
+    const factor = next / camera.current.zoom;
+    camera.current.x *= factor;
+    camera.current.y *= factor;
+    camera.current.zoom = next;
     (appRef.current as any)?.redraw?.();
   }
   return (
@@ -547,6 +759,19 @@ export function PierMap(p: Props) {
             : `PIER 39 level ${p.floor} interactive isometric map`
         }
       />
+      {mapError && (
+        <div className="map-error" role="alert">
+          <p>{mapError}</p>
+          <button
+            onClick={() => {
+              setMapError("");
+              setAttempt((n) => n + 1);
+            }}
+          >
+            Reload map
+          </button>
+        </div>
+      )}
       <div className="map-context">
         <span>◈ SAN FRANCISCO BAY</span>
         <small>
@@ -555,6 +780,14 @@ export function PierMap(p: Props) {
         </small>
       </div>
       <div className="map-navigation">
+        {p.selectedGuest && (
+          <button
+            onClick={() => (appRef.current as any)?.focusGuest?.()}
+            aria-label="Center on selected visitor"
+          >
+            Center visitor
+          </button>
+        )}
         <button aria-label="Zoom in" onClick={() => zoom(1.25)}>
           ＋
         </button>
@@ -579,7 +812,7 @@ export function PierMap(p: Props) {
           hover ??
           (p.editable
             ? "Drag a highlighted object or its label · drag water to pan"
-            : "Select a place or visitor · drag water to pan")}
+            : "Click a visitor to inspect · scroll to zoom · drag water to pan")}
       </div>
     </div>
   );

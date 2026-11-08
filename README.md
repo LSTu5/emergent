@@ -122,3 +122,13 @@ Use **Quick test · 100 visitors** to watch a short rules-driven run. Pause abov
 To keep inspection responsive, animation switches off above 120× or 300 active groups. Pause to inspect a maximum of 300 markers, including the selected group; all visitors remain in the metrics. Static pier scenery is reused between updates, polling does not overlap, and map rendering errors offer a reload action without stopping server-side runs. Recorded playback uses the stored five-minute snapshots; it is not a continuous motion recording.
 
 The boardwalk is a schematic, not a surveyed replica: path widths now render in ground units, the entrance has an open connection to the plaza, terrace furniture avoids tenant footprints, and the upper deck follows the connected promenade and tenant bays. Fixed navigation geometry and saved-layout migration remain validated.
+
+### Visitor profiles and flexible editing
+
+Visitor groups now contain reproducible fictional members with names, ages and family/adult roles. Select a person or search a name, age, group ID or visit purpose to inspect the party, preferences, budget and decision history. The **Individual people / Visitor groups** selector changes marker detail; marker size and zoomed-in name labels are adjustable. Rendering is capped at 300 markers and prioritizes the selected group. Members share a route, decisions and wallet; they are not separate independent AI decision makers. Display identities use a separate seeded stream, so naming visitors does not alter their spending or behavior. Older recordings receive deterministic display profiles without rewriting their original data.
+
+In an editable alternative, drag a kiosk, shop, seating or event tool onto the map. Click a tool for automatic placement. Select an object to resize its footprint, rotate it 90°, duplicate it, or move it between levels using **Placement & size**. Snapping supports 0.5, 1 and 2 metres; arrow keys nudge a focused map selection, and Shift uses five steps. Invalid drops, overlaps and blocked paths are rejected. Undo/redo and saved versions apply to these edits; fixed buildings and navigation remain protected.
+
+### Silent demo
+
+[Watch or download the 76-second captioned demo](docs/demo/pier39-demo.mp4) · [SRT captions](docs/demo/pier39-demo.srt). This recording demonstrates the live controls, pier levels and crowd comparison from commit `4b23974`; the visitor profiles and additional editing tools above were added afterward.

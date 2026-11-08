@@ -1169,3 +1169,59 @@ main.comparison-workspace {
 main.comparison-workspace > .left-panel {
   display: none;
 }
+
+.visitor-profiles {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+}
+.visitor-profile {
+  display: flex;
+  text-align: left;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #f8faf4;
+  border: 1px solid #d8e0d3;
+}
+.visitor-profile.selected {
+  border-color: #477b78;
+  background: #e4efdf;
+}
+.visitor-profile .avatar {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #315b65;
+  color: white;
+  flex-shrink: 0;
+  font-size: 11px;
+}
+.visitor-profile strong,
+.visitor-profile small {
+  display: block;
+}
+.visitor-profile small {
+  margin-top: 4px;
+  font-weight: 400;
+}
+.placement-controls {
+  margin: 14px 0;
+  padding: 12px 0;
+  border-top: 1px solid #d8e0d3;
+}
+.placement-controls .button-row {
+  flex-wrap: wrap;
+}
+.map-canvas:focus-visible {
+  outline: 2px solid #477b78;
+  outline-offset: -2px;
+}
+.live-controls input[type="range"] {
+  max-width: 100px;
+}
+.tools button[draggable="true"] {
+  cursor: grab;
+}

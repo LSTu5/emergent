@@ -79,7 +79,14 @@ export interface Config {
   hourly: number[];
   speed: number;
 }
+export interface VisitorMember {
+  id: string;
+  name: string;
+  age: number;
+  role: "parent" | "child" | "adult" | "older adult";
+}
 export interface Profile {
+  members?: VisitorMember[];
   mode?: "car" | "walk-transit";
   mealIntent?: boolean;
   priorityStop?: string;

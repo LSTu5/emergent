@@ -1,0 +1,47 @@
+1
+00:00:00,000 --> 00:00:04,000
+Explore crowd behavior before changing the pier.
+
+2
+00:00:04,000 --> 00:00:09,000
+Start with one shared PIER 39 layout.
+
+3
+00:00:09,000 --> 00:00:19,000
+Run a small 100-visitor test and watch groups move.
+
+4
+00:00:19,000 --> 00:00:27,000
+Pause, zoom in, and inspect a group’s destination, budget and decisions.
+
+5
+00:00:27,000 --> 00:00:34,000
+Resume the simulation without losing your place.
+
+6
+00:00:34,000 --> 00:00:41,000
+Explore connected shops and terraces on the upper level.
+
+7
+00:00:41,000 --> 00:00:47,000
+Speed up the run. Overview mode updates metrics without crowd animation.
+
+8
+00:00:47,000 --> 00:00:53,000
+Compare 1,000 vs 2,000 visitors on the same layout.
+
+9
+00:00:53,000 --> 00:01:01,000
+The tests run one at a time, with matched arrival patterns.
+
+10
+00:01:01,000 --> 00:01:09,000
+Simulated sales: $51,425 vs $102,826.
+
+11
+00:01:09,000 --> 00:01:13,000
+Both levels receive visits. Results are illustrative, rules-based estimates.
+
+12
+00:01:13,000 --> 00:01:16,000
+Start small. Inspect closely. Compare demand.

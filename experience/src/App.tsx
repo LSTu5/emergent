@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import demoManifest from "../../data/demo-manifest.json";
 import { BASELINE, categoryDefaults } from "../../shared/baseline";
 import {
@@ -10,6 +10,7 @@ import {
   findVenuePosition,
   placeVenue,
   repairObjectPositions,
+  reshapeVenue,
 } from "../../shared/editing";
 import {
   DEFAULT_CONFIG,
@@ -26,6 +27,12 @@ import {
   type Frame,
   type Point,
 } from "../../shared/contracts";
+import {
+  groupLabel,
+  membersFor,
+  profileDescription,
+} from "../../shared/profiles";
+import { PlacementControls, type Footprint } from "./PlacementControls";
 import { PierMap, COLORS } from "./Map";
 import { SCENARIOS, scenario } from "../../shared/scenarios";
 import { DemandExperiment } from "./DemandExperiment";
@@ -153,6 +160,11 @@ export default function App() {
     [bothFloors, setBothFloors] = useState(true),
     [tab, setTab] = useState("plan"),
     [scenarioId, setScenarioId] = useState<string>("dining"),
+    [snap, setSnap] = useState(1),
+    [markerMode, setMarkerMode] = useState<"groups" | "people">("people"),
+    [markerScale, setMarkerScale] = useState(1),
+    [markerLabels, setMarkerLabels] = useState(false),
+    [memberId, setMemberId] = useState<string | null>(null),
     [paths, setPaths] = useState(false),
     [pathId, setPathId] = useState("walk-1-4"),
     [heat, setHeat] = useState("none");
@@ -185,6 +197,18 @@ export default function App() {
       status: Snapshot["status"];
       frame: Frame;
     } | null>(null);
+  const visitorProfiles = useMemo(
+    () =>
+      new Map(
+        (run?.agents ?? []).map((a) => [
+          a.id,
+          { ...a, members: membersFor(a, run!.config.seed) },
+        ]),
+      ),
+    [run?.id],
+  );
+  const labelFor = (a: Snapshot["agents"][number]) =>
+    groupLabel(visitorProfiles.get(a.id) ?? a, run?.config.seed ?? "");
   const controlRevision = useRef(0);
   const activeRun = useRef(runId);
   activeRun.current = runId;
@@ -375,6 +399,39 @@ export default function App() {
     });
     setNotice(`${venue.name} moved. Undo is available; save when ready.`);
   }
+  function applyFootprint(patch: Footprint) {
+    if (!editable || tab !== "plan" || !venue) return;
+    const result = reshapeVenue(layout, venue, patch);
+    if (result.errors.length) {
+      setError(`Placement unchanged. ${result.errors[0]}`);
+      return;
+    }
+    edit({
+      ...clone(layout),
+      venues: layout.venues.map((v) => (v.id === venue.id ? result.venue : v)),
+    });
+    setFloor(result.venue.floor);
+    setBothFloors(false);
+  }
+  function duplicateVenue() {
+    if (!editable || tab !== "plan" || !venue?.movable) return;
+    const copy = {
+      ...clone(venue),
+      id: `object-${crypto.randomUUID()}`,
+      name: `${venue.name} copy`,
+      x: venue.x + snap,
+      y: venue.y + snap,
+    };
+    const placed = findVenuePosition(layout, copy);
+    if (!placed) {
+      setError("No clear space for a duplicate on this level.");
+      return;
+    }
+    edit({ ...clone(layout), venues: [...layout.venues, placed] });
+    setSelected(placed.id);
+    setFloor(placed.floor);
+    setBothFloors(false);
+  }
   function repairPlacement() {
     const result = repairObjectPositions(layout);
     if (!result) {
@@ -404,7 +461,7 @@ export default function App() {
     setError("");
     edit(next);
   }
-  function add(category: Venue["category"]) {
+  function add(category: Venue["category"], point?: Point) {
     if (!editable || tab !== "plan") return;
     const n = clone(layout);
     const id = `object-${crypto.randomUUID()}`;
@@ -415,7 +472,9 @@ export default function App() {
           ? "New food kiosk"
           : category === "seating"
             ? "New seating"
-            : "Pop-up performance",
+            : category === "shop"
+              ? "Pop-up shop"
+              : "Pop-up performance",
       category,
       floor,
       x: 83,
@@ -439,7 +498,13 @@ export default function App() {
       source: "Management proposal",
       ...categoryDefaults(category),
     };
-    const placed = findVenuePosition(n, v);
+    if (point) Object.assign(v, point);
+    const drop = point ? placeVenue(n, v, point) : null;
+    if (drop?.errors.length) {
+      setError(`Nothing added. ${drop.errors[0]}`);
+      return;
+    }
+    const placed = drop?.venue ?? findVenuePosition(n, v);
     if (!placed) {
       setNotice("");
       setError(
@@ -453,6 +518,7 @@ export default function App() {
     setGuest(null);
     edit(n);
     setSelected(id);
+    setFloor(placed.floor);
     setNotice(
       `${placed.name} added in a clear space. Drag its label or the object to reposition it.`,
     );
@@ -561,7 +627,12 @@ export default function App() {
     run?.agents.filter(
       (a) =>
         (recordedIds ? recordedIds.has(a.id) : a.state !== "pending") &&
-        `${a.id} ${a.purpose}`
+        `${a.id} ${a.purpose} ${membersFor(
+          visitorProfiles.get(a.id) ?? a,
+          run!.config.seed,
+        )
+          .map((m) => `${m.name} ${m.age}`)
+          .join(" ")}`
           .toLowerCase()
           .includes(guestSearch.toLowerCase()),
     ) ?? [];
@@ -888,19 +959,52 @@ export default function App() {
               <div className="divider" />
               <div className="panel-label">DESIGN TOOLS</div>
               <div className="tools">
-                {(["cafe", "seating", "event"] as const).map((c) => (
-                  <button disabled={!editable} key={c} onClick={() => add(c)}>
+                {(["cafe", "shop", "seating", "event"] as const).map((c) => (
+                  <button
+                    disabled={!editable}
+                    key={c}
+                    draggable={editable}
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData("application/x-pier-category", c);
+                      e.dataTransfer.effectAllowed = "copy";
+                    }}
+                    onClick={() => add(c)}
+                  >
                     <span>
-                      {c === "cafe" ? "▣" : c === "seating" ? "≡" : "☷"}
+                      {c === "cafe"
+                        ? "▣"
+                        : c === "shop"
+                          ? "▧"
+                          : c === "seating"
+                            ? "≡"
+                            : "☷"}
                     </span>
-                    {c === "cafe"
-                      ? "Kiosk"
-                      : c === "seating"
-                        ? "Seating"
-                        : "Event"}
+                    {c === "shop"
+                      ? "Shop"
+                      : c === "cafe"
+                        ? "Kiosk"
+                        : c === "seating"
+                          ? "Seating"
+                          : "Event"}
                   </button>
                 ))}
               </div>
+              <label>
+                Snap spacing
+                <select
+                  aria-label="Snap spacing"
+                  value={snap}
+                  onChange={(e) => setSnap(+e.target.value)}
+                >
+                  <option value={0.5}>0.5 m · fine</option>
+                  <option value={1}>1 m</option>
+                  <option value={2}>2 m</option>
+                </select>
+              </label>
+              <p className="hint">
+                Drag a tool onto the boardwalk, or click it to find a clear
+                position. Drag objects to move them.
+              </p>
               <button
                 className={`wide ${paths ? "active-tool" : ""}`}
                 disabled={!editable}
@@ -1388,19 +1492,22 @@ export default function App() {
                   )}
                   <input
                     aria-label="Search groups"
-                    placeholder="Find group or visit purpose"
+                    placeholder="Name, age, group or purpose"
                     value={guestSearch}
                     onChange={(e) => setGuestSearch(e.target.value)}
                   />
                   <select
                     aria-label="Inspect visitor"
                     value={guest ?? ""}
-                    onChange={(e) => setGuest(e.target.value || null)}
+                    onChange={(e) => {
+                      setGuest(e.target.value || null);
+                      setMemberId(null);
+                    }}
                   >
                     <option value="">Inspect a visitor…</option>
                     {guestList.slice(0, 100).map((a) => (
                       <option key={a.id} value={a.id}>
-                        {a.id} · {a.purpose}
+                        {labelFor(a)} · {a.purpose}
                       </option>
                     ))}
                     {guest &&
@@ -1410,16 +1517,56 @@ export default function App() {
                         </option>
                       )}
                   </select>
+                  <label>
+                    Markers
+                    <select
+                      aria-label="Visitor rendering"
+                      value={markerMode}
+                      onChange={(e) =>
+                        setMarkerMode(e.target.value as "people" | "groups")
+                      }
+                    >
+                      <option value="people">Individual people</option>
+                      <option value="groups">Visitor groups</option>
+                    </select>
+                  </label>
+                  <label>
+                    Marker size
+                    <input
+                      aria-label="Visitor marker size"
+                      type="range"
+                      min={0.75}
+                      max={2}
+                      step={0.25}
+                      value={markerScale}
+                      onChange={(e) => setMarkerScale(+e.target.value)}
+                    />
+                  </label>
+                  <label className="check-label">
+                    <input
+                      type="checkbox"
+                      checked={markerLabels}
+                      onChange={(e) => setMarkerLabels(e.target.checked)}
+                    />
+                    Names when zoomed in
+                  </label>
                   <small>
                     {visualFrame?.agents.length ?? 0} groups on pier · click a
                     person to inspect ·{" "}
                     {display.overview
                       ? "Overview mode: crowd animation off at high speed or density. Pause to inspect."
-                      : "Up to 300 groups drawn; all visitors included in metrics."}
+                      : "Up to 300 markers drawn; all visitors included in metrics."}
                   </small>
                 </div>
               )}
               <PierMap
+                snap={snap}
+                markerMode={markerMode}
+                markerScale={markerScale}
+                markerLabels={markerLabels}
+                selectedMember={memberId}
+                profiles={visitorProfiles}
+                onCreate={add}
                 layout={viewLayout}
                 floor={floor}
                 both={bothFloors}
@@ -1452,7 +1599,10 @@ export default function App() {
                   )!.enabled;
                   editPaths(n);
                 }}
-                onGuest={(id) => setGuest(id)}
+                onGuest={(id, member) => {
+                  setGuest(id);
+                  setMemberId(member ?? null);
+                }}
               />
               <div className="legend">
                 {CATEGORIES.map((c) => (
@@ -1649,7 +1799,38 @@ export default function App() {
           {agent && tab === "simulate" ? (
             <>
               <div className="panel-label">VISITOR GROUP</div>
-              <h2>{agent.purpose}</h2>
+              <h2>{labelFor(agent)}</h2>
+              <p>{agent.purpose}</p>
+              <div className="visitor-profiles" aria-label="Visitor profiles">
+                {membersFor(
+                  visitorProfiles.get(agent.id) ?? agent,
+                  run!.config.seed,
+                ).map((m) => (
+                  <button
+                    key={m.id}
+                    className={`visitor-profile ${memberId === m.id ? "selected" : ""}`}
+                    onClick={() => setMemberId(m.id)}
+                  >
+                    <span className="avatar">
+                      {m.name
+                        .split(" ")
+                        .map((w) => w[0])
+                        .join("")}
+                    </span>
+                    <span>
+                      <strong>{m.name}</strong>
+                      <small>
+                        Age {m.age} · {m.role}
+                      </small>
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <p className="hint">{profileDescription(agent)}</p>
+              <p className="hint">
+                Fictional profiles. Members travel and decide together using one
+                shared budget.
+              </p>
               <p className="agent-id">
                 {agent.id} · Level{" "}
                 {recordedAgent?.floor ?? agent.position.floor}
@@ -1902,6 +2083,13 @@ export default function App() {
                     />
                   </label>
                 )}
+                {venue.movable && tab === "plan" && (
+                  <PlacementControls
+                    venue={venue}
+                    apply={applyFootprint}
+                    duplicate={duplicateVenue}
+                  />
+                )}
                 {venue.movable && (
                   <p className="hint">
                     Position: x {venue.x}, y {venue.y} · Level {venue.floor}.
@@ -1980,7 +2168,7 @@ export default function App() {
                 <input
                   value={guestSearch}
                   onChange={(e) => setGuestSearch(e.target.value)}
-                  placeholder="Group ID or purpose"
+                  placeholder="Name, age, group ID or purpose"
                 />
               </label>
               <p className="hint">
@@ -1994,13 +2182,14 @@ export default function App() {
                   key={a.id}
                   onClick={() => {
                     setGuest(a.id);
+                    setMemberId(null);
                     setFloor(
                       visualFrame?.agents.find((r) => r.id === a.id)?.floor ??
                         a.position.floor,
                     );
                   }}
                 >
-                  {a.id}
+                  {labelFor(a)}
                   <small>
                     {a.purpose} ·{" "}
                     {visualFrame?.agents.find((r) => r.id === a.id)?.state ??

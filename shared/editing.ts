@@ -72,3 +72,28 @@ export function repairObjectPositions(
   result.venues = layout.venues.map((v) => positions.get(v.id)!);
   return { layout: result, moved };
 }
+
+export function reshapeVenue(
+  layout: Layout,
+  venue: Venue,
+  patch: Pick<Venue, "x" | "y" | "w" | "h" | "floor">,
+) {
+  if (!venue.movable)
+    return { venue, errors: ["Fixed buildings cannot be moved or resized"] };
+  if (
+    ![patch.x, patch.y, patch.w, patch.h].every(Number.isFinite) ||
+    patch.w < 1 ||
+    patch.h < 1 ||
+    ![1, 2].includes(patch.floor)
+  )
+    return {
+      venue,
+      errors: [
+        "Use finite positions, dimensions of at least 1 metre, and a valid level",
+      ],
+    };
+  return placeVenue(layout, { ...venue, ...patch }, patch);
+}
+export function snapCoordinate(value: number, step: number) {
+  return Math.round(value / step) * step;
+}

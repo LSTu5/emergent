@@ -22,3 +22,27 @@ export function sceneFrames(both: boolean, floor: 1 | 2) {
       ]
     : [{ floor, x: 0, y: 0 }];
 }
+
+/** Canvas coordinates to a floor, accounting for the same camera and panes as rendering. */
+export function dropPoint(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  camera: { zoom: number; x: number; y: number },
+  both: boolean,
+  floor: 1 | 2,
+) {
+  const sceneW = both ? 570 : 545,
+    sceneH = both ? 575 : 290;
+  const scale =
+    Math.min((width - 40) / sceneW, (height - 75) / sceneH) * camera.zoom;
+  const ox = (width - sceneW * scale) / 2 + camera.x,
+    oy = (height - sceneH * scale) / 2 + camera.y + 12;
+  for (const pane of sceneFrames(both, floor)) {
+    const p = unproject((x - ox) / scale - pane.x, (y - oy) / scale - pane.y);
+    if (p.x >= 8 && p.x <= 146 && p.y >= 22 && p.y <= 302)
+      return { ...p, floor: pane.floor };
+  }
+  return null;
+}

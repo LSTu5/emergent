@@ -7,16 +7,24 @@ import {
   type FederatedPointerEvent,
 } from "pixi.js";
 import { VisitorMotion, visitorStyle } from "./renderer/visitorMotion";
-import { placeVenue } from "../../shared/editing";
+import { visitorMarkers } from "./renderer/visitorMarkers";
+import { placeVenue, snapCoordinate } from "../../shared/editing";
 import type {
   Layout,
   Floor,
   Snapshot,
   Frame,
   Point,
+  Category,
+  Profile,
 } from "../../shared/contracts";
 import { BASELINE } from "../../shared/baseline";
-import { project, groundDelta, sceneFrames } from "./renderer/projection";
+import {
+  project,
+  groundDelta,
+  sceneFrames,
+  dropPoint,
+} from "./renderer/projection";
 import { Draw, label } from "./renderer/drawing";
 import {
   COLORS,
@@ -27,6 +35,13 @@ import {
 } from "./renderer/pierScene";
 export { COLORS };
 interface Props {
+  snap: number;
+  markerMode: "groups" | "people";
+  markerScale: number;
+  markerLabels: boolean;
+  selectedMember: string | null;
+  profiles: Map<string, Profile>;
+  onCreate: (category: Category, point: Point) => void;
   layout: Layout;
   floor: Floor;
   both: boolean;
@@ -43,7 +58,7 @@ interface Props {
   onSelect: (id: string) => void;
   onMove: (id: string, p: Point) => void;
   onPath: (id: string) => void;
-  onGuest: (id: string) => void;
+  onGuest: (id: string, member?: string) => void;
   onFloor: (f: Floor) => void;
 }
 export function PierMap(p: Props) {
@@ -88,6 +103,14 @@ export function PierMap(p: Props) {
         if (!sprite.graphic.destroyed)
           sprite.graphic.destroy({ children: true });
       sprites = [];
+      const markers = visitorMarkers(
+        visitors,
+        p.profiles,
+        p.run?.config.seed ?? "",
+        p.markerMode,
+        p.selectedGuest,
+      );
+      const poses = new Map(visitors.map((a) => [a.id, a]));
       for (const { models, floor, scale, trail } of layers) {
         trail.clear();
         const selected = visitors.find((a) => a.id === p.selectedGuest);
@@ -113,10 +136,17 @@ export function PierMap(p: Props) {
               );
           }
         }
-        for (const a of visitors.filter((a) => a.floor === floor)) {
-          const style = visitorStyle(a.id),
+        for (const marker of markers.filter(
+          (m) => poses.get(m.groupId)?.floor === floor,
+        )) {
+          const a = poses.get(marker.groupId)!;
+          const style = visitorStyle(marker.id),
             g = new Graphics();
-          const selected = a.id === p.selectedGuest;
+          const selected =
+            a.id === p.selectedGuest &&
+            (!p.selectedMember ||
+              p.markerMode === "groups" ||
+              marker.id === p.selectedMember);
           if (selected)
             g.ellipse(0, 0, 4, 2)
               .fill({ color: 0xffe3a1, alpha: 0.8 })
@@ -127,25 +157,67 @@ export function PierMap(p: Props) {
           );
           g.circle(0, -2.7, 0.7).fill(0xd6b28c);
           // Keep people and their hit areas usable even in the whole-pier view.
-          g.scale.set(Math.max(1, 1.6 / scale));
+          g.scale.set(
+            Math.max(1, 1.6 / scale) *
+              p.markerScale *
+              (marker.member?.role === "child" ? 0.8 : 1),
+          );
           g.hitArea = new Rectangle(-4, -7, 8, 10);
           g.eventMode = "static";
           g.cursor = "pointer";
           g.on("pointerdown", (event: FederatedPointerEvent) =>
             event.stopPropagation(),
           );
-          g.on("pointertap", () => props.current.onGuest(a.id));
+          g.on("pointertap", () =>
+            props.current.onGuest(a.id, marker.member?.id),
+          );
           g.on("pointerover", () =>
-            setHover(`${a.id} · ${a.state} · click to inspect`),
+            setHover(`${marker.name} · ${a.state} · click to inspect`),
           );
           g.on("pointerout", () => setHover(null));
-          if (selected) label(g, a.id, 0, -9, 4.5, 0x163d46, "700");
+          const lead =
+            markers.find((m) => m.groupId === a.id)?.id === marker.id;
+          if (
+            (selected && (p.selectedMember || lead)) ||
+            (p.markerLabels &&
+              a.id !== p.selectedGuest &&
+              lead &&
+              camera.current.zoom >= 2 &&
+              markers.indexOf(marker) < 60)
+          ) {
+            // One label per party avoids overlapping names; a selected member
+            // gets their own label. Keep text readable at every zoom and size.
+            const displayScale = scale * g.scale.x;
+            const text = label(
+              g,
+              marker.name,
+              0,
+              -6 - 8 / displayScale,
+              12 / displayScale,
+              0x163d46,
+              "700",
+            );
+            text.resolution = Math.min(12, Math.max(2, displayScale * 2));
+            const padding = 4 / displayScale;
+            g.addChildAt(
+              new Graphics()
+                .roundRect(
+                  -text.width / 2 - padding,
+                  text.y - text.height / 2 - padding,
+                  text.width + padding * 2,
+                  text.height + padding * 2,
+                  3 / displayScale,
+                )
+                .fill({ color: 0xfffbed, alpha: 0.96 }),
+              0,
+            );
+          }
           models.addChild(g);
           sprites.push({
             id: a.id,
             graphic: g,
-            x: style.x,
-            y: style.y,
+            x: p.markerMode === "people" ? marker.x : style.x,
+            y: p.markerMode === "people" ? marker.y : style.y,
             selected,
           });
         }
@@ -530,6 +602,7 @@ export function PierMap(p: Props) {
                 target.on("pointerout", () => setHover(null));
                 target.on("pointerdown", (event: FederatedPointerEvent) => {
                   event.stopPropagation();
+                  host.current?.focus({ preventScroll: true });
                   if (event.button !== 0) return;
                   if (!props.current.editable || !v.movable) {
                     props.current.onSelect(v.id);
@@ -563,8 +636,8 @@ export function PierMap(p: Props) {
                     if (!moved) return;
                     const delta = groundDelta(dx, dy, scale);
                     destination = {
-                      x: Math.round(v.x + delta.x),
-                      y: Math.round(v.y + delta.y),
+                      x: snapCoordinate(v.x + delta.x, props.current.snap),
+                      y: snapCoordinate(v.y + delta.y, props.current.snap),
                       floor: v.floor,
                     };
                     const issues = placeVenue(
@@ -572,8 +645,10 @@ export function PierMap(p: Props) {
                       v,
                       destination,
                     ).errors;
-                    c.position.set(dx / scale, dy / scale);
-                    labelGroup.position.set(dx / scale, dy / scale);
+                    const from = project(v.x, v.y),
+                      to = project(destination.x, destination.y);
+                    c.position.set(to.x - from.x, to.y - from.y);
+                    labelGroup.position.set(to.x - from.x, to.y - from.y);
                     c.alpha = issues.length ? 0.5 : 0.8;
                     preview.clear();
                     const outline: [number, number, number][] = [
@@ -612,6 +687,7 @@ export function PierMap(p: Props) {
                       props.current.onSelect(v.id);
                       if (moved) props.current.onMove(v.id, destination);
                     }
+                    sceneKey = "";
                     render();
                   };
                   const release = (e: PointerEvent) => {
@@ -753,6 +829,69 @@ export function PierMap(p: Props) {
       <div
         className="map-canvas"
         ref={host}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (!p.editable || e.altKey || e.ctrlKey || e.metaKey) return;
+          const v = p.layout.venues.find((v) => v.id === p.selected);
+          if (!v?.movable) return;
+          const delta: Record<string, [number, number]> = {
+            ArrowLeft: [-1, 0],
+            ArrowRight: [1, 0],
+            ArrowUp: [0, -1],
+            ArrowDown: [0, 1],
+          };
+          const d = delta[e.key];
+          if (!d) return;
+          e.preventDefault();
+          const step = p.snap * (e.shiftKey ? 5 : 1);
+          p.onMove(v.id, {
+            x: snapCoordinate(v.x + d[0] * step, p.snap),
+            y: snapCoordinate(v.y + d[1] * step, p.snap),
+            floor: v.floor,
+          });
+        }}
+        onDragOver={(e) => {
+          if (
+            p.editable &&
+            e.dataTransfer.types.includes("application/x-pier-category")
+          ) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "copy";
+          }
+        }}
+        onDrop={(e) => {
+          if (!p.editable) return;
+          const category = e.dataTransfer.getData(
+            "application/x-pier-category",
+          );
+          if (!["cafe", "shop", "seating", "event"].includes(category)) return;
+          e.preventDefault();
+          const app = appRef.current;
+          if (!app) return;
+          const bounds = app.canvas.getBoundingClientRect();
+          const point = dropPoint(
+            ((e.clientX - bounds.left) * app.screen.width) / bounds.width,
+            ((e.clientY - bounds.top) * app.screen.height) / bounds.height,
+            app.screen.width,
+            app.screen.height,
+            camera.current,
+            p.both,
+            p.floor,
+          );
+          if (!point) {
+            setDragFeedback({
+              text: "Drop on the boardwalk to place an object.",
+              invalid: true,
+            });
+            return;
+          }
+          setDragFeedback(null);
+          p.onCreate(category as Category, {
+            ...point,
+            x: snapCoordinate(point.x - 3, p.snap),
+            y: snapCoordinate(point.y - 3, p.snap),
+          });
+        }}
         aria-label={
           p.both
             ? "PIER 39 both levels interactive isometric map"
@@ -811,7 +950,7 @@ export function PierMap(p: Props) {
         {dragFeedback?.text ??
           hover ??
           (p.editable
-            ? "Drag a highlighted object or its label · drag water to pan"
+            ? "Drag tools or objects · arrows nudge a selected object · Shift = 5 steps"
             : "Click a visitor to inspect · scroll to zoom · drag water to pan")}
       </div>
     </div>

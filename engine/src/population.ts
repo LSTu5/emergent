@@ -1,4 +1,5 @@
 import { type Config, type Profile, CATEGORIES } from "../../shared/contracts";
+import { createMembers } from "../../shared/profiles";
 import { random, weighted } from "./random";
 export function population(c: Config): Profile[] {
   const groups: Profile[] = [];
@@ -34,6 +35,7 @@ export function population(c: Config): Profile[] {
     if (purpose === "Family day out") interests.attraction = 2.5;
     groups.push({
       id,
+      members: createMembers(c.seed, { id, size }, family),
       mode: r("mode") < (c.carShare ?? 0.35) ? "car" : "walk-transit",
       mealIntent: purpose === "Dining visit" || r("meal-intent") < 0.35,
       priorityStop:

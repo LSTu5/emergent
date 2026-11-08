@@ -1,0 +1,37 @@
+{
+  "name": "emergent",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node integration/start.mjs",
+    "server": "tsx engine/src/server.ts",
+    "ui": "vite --host 127.0.0.1 --port 4320",
+    "build": "tsc --noEmit && vite build",
+    "test": "tsx --test engine/tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "setup:local": "node integration/setup.mjs",
+    "demo": "tsx integration/demo.ts",
+    "test:e2e": "node_modules/node/bin/node --import tsx integration/management-e2e.ts",
+    "test:scale": "E2E_PHASE=scale node_modules/node/bin/node --import tsx integration/management-e2e.ts",
+    "test:parking": "E2E_PHASE=parking node_modules/node/bin/node --import tsx integration/management-e2e.ts",
+    "test:local-ai": ".venv/bin/python intelligence/local/smoke.py"
+  },
+  "dependencies": {
+    "pixi.js": "^8.6.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "spacetimedb": "2.10.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "node": "24.21.0",
+    "prettier": "^3.9.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
+  }
+}

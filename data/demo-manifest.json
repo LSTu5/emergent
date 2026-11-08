@@ -1,0 +1,96 @@
+{
+  "runId": "run-df43e88d-5acd-4ea3-bd5c-0c13b078fd9f",
+  "model": "laya-multilingual-mlx-f2b4faf5",
+  "behaviorVersion": "pier39.behavior.3",
+  "recordedAt": "2026-11-08T11:59:16.833Z",
+  "visitors": 5000,
+  "frames": 133,
+  "wallSeconds": 689.189204958,
+  "achievedSpeed": 57.458822214740394,
+  "cohortHash": "5fb944d5091b6636dcc121504be051a1175af505692c76ea6f5936ff22d42f3e",
+  "seed": "dining-scale-v3-1",
+  "metrics": {
+    "attempted": 5000,
+    "parkingRejected": 0,
+    "parkingPeak": 305,
+    "mealEpisodes": 1624,
+    "unmetDining": 1459,
+    "totalWaitMinutes": 4518.25,
+    "queueAbandonments": 107,
+    "sales": 11376920,
+    "arrived": 5000,
+    "departed": 5000,
+    "buyers": 2869,
+    "spendPerVisitor": 2275.384,
+    "conversion": 0.5738,
+    "averageVisit": 49.19500310815796,
+    "zeroSpendDepartures": 2131,
+    "waiting": 0,
+    "occupancy": 0,
+    "salesPerM2": 3686.6234607906677,
+    "hourly": [
+      {
+        "hour": 600,
+        "sales": 158552,
+        "visits": 154
+      },
+      {
+        "hour": 660,
+        "sales": 568850,
+        "visits": 355
+      },
+      {
+        "hour": 720,
+        "sales": 1268666,
+        "visits": 620
+      },
+      {
+        "hour": 780,
+        "sales": 1734155,
+        "visits": 718
+      },
+      {
+        "hour": 840,
+        "sales": 1576162,
+        "visits": 687
+      },
+      {
+        "hour": 900,
+        "sales": 1697915,
+        "visits": 729
+      },
+      {
+        "hour": 960,
+        "sales": 1379183,
+        "visits": 583
+      },
+      {
+        "hour": 1020,
+        "sales": 1276964,
+        "visits": 452
+      },
+      {
+        "hour": 1080,
+        "sales": 893275,
+        "visits": 362
+      },
+      {
+        "hour": 1140,
+        "sales": 721861,
+        "visits": 231
+      },
+      {
+        "hour": 1200,
+        "sales": 101337,
+        "visits": 109
+      }
+    ],
+    "categories": {
+      "attraction": 2899732,
+      "shop": 2534815,
+      "restaurant": 5507862,
+      "cafe": 434511
+    }
+  },
+  "description": "Recorded output of an actual completed 5,000-visitor local-AI Engine run from the matched restaurant experiment. Synthetic assumptions, not measured PIER 39 data. Timing includes concurrent validation load."
+}

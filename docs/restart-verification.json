@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-11-08T12:11:47.654304+00:00",
+  "fullStackRestart": "passed",
+  "health": {
+    "ready": true,
+    "storage": "SpacetimeDB",
+    "providers": {
+      "local": true,
+      "rules": true,
+      "jev": false
+    },
+    "version": "pier39.v2"
+  },
+  "savedLayouts": 14,
+  "priorRuns": 41,
+  "priorComparisons": 12,
+  "replays": [
+    {
+      "id": "run-df43e88d-5acd-4ea3-bd5c-0c13b078fd9f",
+      "visitors": 5000,
+      "frames": 133,
+      "cohortHash": "5fb944d5091b6636dcc121504be051a1175af505692c76ea6f5936ff22d42f3e"
+    },
+    {
+      "id": "run-5d2cac95-8f1f-4cb8-ae58-31287446ce43",
+      "visitors": 30000,
+      "frames": 133,
+      "cohortHash": "f711b9517d824f4d75b0113cfd87dd027c4d472600b8ce31867c53d12a91ca54"
+    }
+  ],
+  "complimentaryMeal": {
+    "id": "run-a24c6661-b838-4727-addc-eda35eddf240",
+    "status": "completed",
+    "sales": 0,
+    "groupsServed": 9,
+    "walletConservation": true,
+    "oneMealPerOccasion": true
+  }
+}

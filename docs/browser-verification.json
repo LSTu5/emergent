@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-11-08T12:04:26.838805+00:00",
+  "application": "http://127.0.0.1:4320",
+  "checks": {
+    "isometricBothLevels": "passed: separate overview plus Level 1/Level 2 focus, detailed buildings, boardwalks, terraces, marina and sea lion docks",
+    "dragKiosk": "moved x=65,y=181 to x=65,y=157 through inverse-projected native drag",
+    "invalidPlacement": "overlap with SF Sock Market rejected; previous position retained",
+    "undoRedoReset": "positions 181 -> 157 -> undo 181 -> redo 157; reset 181 and undo 157 verified",
+    "layoutPersistence": "Browser \u00b7 isometric editing check saved to local database",
+    "scenarioTemplate": "upper-level shops converted to Proposed terrace restaurant; 72 places and editable hours/prices",
+    "pairedReport": "three completed 30,000-person rules pairs reopened; absolute/relative sales and venue gains/declines reconciled",
+    "largeReplay": "30,000-person actual saved run opened and scrubbed; both-floor visitors and occupancy overlay verified",
+    "playRecording": "timeline advanced from frame 48 to frame 98 and paused",
+    "historicalVisitor": "group-20 showed its recorded budget, dining visit, wait and 17:54 restaurant purchase",
+    "bundledLocalAI": "new 5,000-person completed baseline opened; Local AI, 5,000 visitors and Current PIER 39 settings restored correctly; 14:00 frame rendered",
+    "responsive": "605 px default and 481 px narrow viewport had no horizontal document overflow; comparison overflow fixed and retested",
+    "console": "no errors or warnings in final browser check"
+  },
+  "limitations": [
+    "Schematic geography and uncalibrated demand, operating and behavior assumptions",
+    "Parking is a bounded garage admission model; not a road traffic simulation",
+    "Jev adapter remains disabled and untested with paid credentials"
+  ]
+}

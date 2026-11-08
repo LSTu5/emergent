@@ -1,0 +1,5290 @@
+{
+  "checkedAt": "2026-11-08T12:06:31.279Z",
+  "comparison": {
+    "id": "comparison-6b7ffa6c-4c7f-4189-9364-f1b30c46233a",
+    "baseline": {
+      "parking": {
+        "enabled": true,
+        "spaces": 976
+      },
+      "version": "pier39.v2",
+      "id": "pier39-current",
+      "revision": 1,
+      "name": "Current PIER 39",
+      "description": "Schematic of the published 2026 directory. Dimensions, connections and operating parameters are approximations; smaller tenants are grouped.",
+      "venues": [
+        {
+          "id": "wipeout",
+          "name": "Wipeout Bar & Grill",
+          "category": "restaurant",
+          "floor": 1,
+          "x": 23,
+          "y": 278,
+          "w": 35,
+          "h": 18,
+          "zone": "A-1",
+          "nodeId": "door-wipeout",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "hard-rock",
+          "name": "Hard Rock Cafe",
+          "category": "restaurant",
+          "floor": 1,
+          "x": 94,
+          "y": 278,
+          "w": 35,
+          "h": 18,
+          "zone": "Q-1",
+          "nodeId": "door-hard-rock",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "souvenirs-south",
+          "name": "Entrance gifts & apparel",
+          "category": "shop",
+          "floor": 1,
+          "x": 23,
+          "y": 254,
+          "w": 35,
+          "h": 18,
+          "zone": "B-1 / D-1",
+          "nodeId": "door-souvenirs-south",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "aquarium",
+          "name": "Aquarium of the Bay",
+          "category": "attraction",
+          "floor": 1,
+          "x": 94,
+          "y": 254,
+          "w": 35,
+          "h": 18,
+          "zone": "R-1",
+          "nodeId": "door-aquarium",
+          "movable": false,
+          "capacity": 90,
+          "dwellMin": 45,
+          "dwellMax": 75,
+          "spendMin": 3000,
+          "spendMax": 3800,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "sweet-treats",
+          "name": "Chocolate & sweet shops",
+          "category": "cafe",
+          "floor": 1,
+          "x": 23,
+          "y": 230,
+          "w": 35,
+          "h": 18,
+          "zone": "D-1",
+          "nodeId": "door-sweet-treats",
+          "movable": false,
+          "capacity": 14,
+          "dwellMin": 5,
+          "dwellMax": 18,
+          "spendMin": 600,
+          "spendMax": 1600,
+          "purchaseProbability": 0.9,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "east-retail",
+          "name": "East-side gifts & boutiques",
+          "category": "shop",
+          "floor": 1,
+          "x": 94,
+          "y": 230,
+          "w": 35,
+          "h": 18,
+          "zone": "P-1",
+          "nodeId": "door-east-retail",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "specialty-west",
+          "name": "West-side specialty shops",
+          "category": "shop",
+          "floor": 1,
+          "x": 23,
+          "y": 206,
+          "w": 35,
+          "h": 18,
+          "zone": "E-1",
+          "nodeId": "door-specialty-west",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "musical-stairs",
+          "name": "Musical stairs",
+          "category": "viewpoint",
+          "floor": 1,
+          "x": 94,
+          "y": 206,
+          "w": 35,
+          "h": 18,
+          "zone": "O-1",
+          "nodeId": "door-musical-stairs",
+          "movable": false,
+          "capacity": 15,
+          "dwellMin": 3,
+          "dwellMax": 8,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 600,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "pier-market",
+          "name": "Pier Market Seafood",
+          "category": "restaurant",
+          "floor": 1,
+          "x": 23,
+          "y": 182,
+          "w": 35,
+          "h": 18,
+          "zone": "F-1",
+          "nodeId": "door-pier-market",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "north-retail",
+          "name": "Apparel & local gifts",
+          "category": "shop",
+          "floor": 1,
+          "x": 94,
+          "y": 182,
+          "w": 35,
+          "h": 18,
+          "zone": "N-1",
+          "nodeId": "door-north-retail",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "sf-socks",
+          "name": "SF Sock Market & neighbors",
+          "category": "shop",
+          "floor": 1,
+          "x": 23,
+          "y": 158,
+          "w": 35,
+          "h": 18,
+          "zone": "G-1",
+          "nodeId": "door-sf-socks",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "bay-plunge",
+          "name": "The Bay Plunge",
+          "category": "attraction",
+          "floor": 1,
+          "x": 23,
+          "y": 134,
+          "w": 35,
+          "h": 18,
+          "zone": "H-1",
+          "nodeId": "door-bay-plunge",
+          "movable": false,
+          "capacity": 12,
+          "dwellMin": 5,
+          "dwellMax": 10,
+          "spendMin": 1200,
+          "spendMax": 1200,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "west-gifts",
+          "name": "West promenade gifts",
+          "category": "shop",
+          "floor": 1,
+          "x": 23,
+          "y": 110,
+          "w": 35,
+          "h": 18,
+          "zone": "I-1 / J-1",
+          "nodeId": "door-west-gifts",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "carousel",
+          "name": "San Francisco Carousel",
+          "category": "attraction",
+          "floor": 1,
+          "x": 94,
+          "y": 62,
+          "w": 35,
+          "h": 18,
+          "zone": "Bay end",
+          "nodeId": "door-carousel",
+          "movable": false,
+          "capacity": 24,
+          "dwellMin": 5,
+          "dwellMax": 8,
+          "spendMin": 1000,
+          "spendMax": 1000,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "christmas",
+          "name": "Christmas in San Francisco",
+          "category": "shop",
+          "floor": 1,
+          "x": 23,
+          "y": 86,
+          "w": 35,
+          "h": 18,
+          "zone": "K-1",
+          "nodeId": "door-christmas",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "7d",
+          "name": "7D Experience",
+          "category": "attraction",
+          "floor": 1,
+          "x": 94,
+          "y": 110,
+          "w": 35,
+          "h": 18,
+          "zone": "M-1",
+          "nodeId": "door-7d",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 10,
+          "dwellMax": 15,
+          "spendMin": 1200,
+          "spendMax": 2600,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "sea-lions",
+          "name": "Sea lion viewing",
+          "category": "viewpoint",
+          "floor": 1,
+          "x": 23,
+          "y": 62,
+          "w": 35,
+          "h": 18,
+          "zone": "K Dock",
+          "nodeId": "door-sea-lions",
+          "movable": false,
+          "capacity": 100,
+          "dwellMin": 8,
+          "dwellMax": 24,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 600,
+          "close": 1260,
+          "areaM2": 200,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "players",
+          "name": "Players Sports Grill & Arcade",
+          "category": "restaurant",
+          "floor": 1,
+          "x": 94,
+          "y": 86,
+          "w": 35,
+          "h": 18,
+          "zone": "L-1 / M-1",
+          "nodeId": "door-players",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "bay-stage",
+          "name": "Bay End Stage",
+          "category": "event",
+          "floor": 1,
+          "x": 94,
+          "y": 38,
+          "w": 35,
+          "h": 18,
+          "zone": "Bay end",
+          "nodeId": "door-bay-stage",
+          "movable": false,
+          "capacity": 45,
+          "dwellMin": 12,
+          "dwellMax": 25,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 660,
+          "close": 1140,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [
+            690,
+            750,
+            810,
+            870,
+            930,
+            990,
+            1050,
+            1110
+          ],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "bay-lookout",
+          "name": "Bay panorama",
+          "category": "viewpoint",
+          "floor": 1,
+          "x": 23,
+          "y": 38,
+          "w": 35,
+          "h": 18,
+          "zone": "Bay end",
+          "nodeId": "door-bay-lookout",
+          "movable": false,
+          "capacity": 40,
+          "dwellMin": 8,
+          "dwellMax": 24,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 600,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "fog-harbor",
+          "name": "Fog Harbor Fish House",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 23,
+          "y": 278,
+          "w": 35,
+          "h": 18,
+          "zone": "A-2",
+          "nodeId": "door-fog-harbor",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "flyer",
+          "name": "The Flyer & escape rooms",
+          "category": "attraction",
+          "floor": 2,
+          "x": 94,
+          "y": 278,
+          "w": 35,
+          "h": 18,
+          "zone": "Q-2",
+          "nodeId": "door-flyer",
+          "movable": false,
+          "capacity": 30,
+          "dwellMin": 20,
+          "dwellMax": 45,
+          "spendMin": 1200,
+          "spendMax": 2600,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "eagle",
+          "name": "Eagle Cafe",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 23,
+          "y": 254,
+          "w": 35,
+          "h": 18,
+          "zone": "A-2",
+          "nodeId": "door-eagle",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 1800,
+          "spendMax": 3500,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "taco",
+          "name": "Taco Cantina",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 94,
+          "y": 254,
+          "w": 35,
+          "h": 18,
+          "zone": "P-2",
+          "nodeId": "door-taco",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 1800,
+          "spendMax": 3200,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "crab-house",
+          "name": "Crab House",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 23,
+          "y": 230,
+          "w": 35,
+          "h": 18,
+          "zone": "C-2",
+          "nodeId": "door-crab-house",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 3500,
+          "spendMax": 6500,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "mirror-maze",
+          "name": "Magowan’s Mirror Maze",
+          "category": "attraction",
+          "floor": 2,
+          "x": 94,
+          "y": 206,
+          "w": 35,
+          "h": 18,
+          "zone": "O-2",
+          "nodeId": "door-mirror-maze",
+          "movable": false,
+          "capacity": 30,
+          "dwellMin": 10,
+          "dwellMax": 20,
+          "spendMin": 1000,
+          "spendMax": 1000,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "spice-tea",
+          "name": "Spice & Tea Exchange",
+          "category": "shop",
+          "floor": 2,
+          "x": 23,
+          "y": 206,
+          "w": 35,
+          "h": 18,
+          "zone": "E-2",
+          "nodeId": "door-spice-tea",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "swiss-louis",
+          "name": "Swiss Louis",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 23,
+          "y": 158,
+          "w": 35,
+          "h": 18,
+          "zone": "G-2",
+          "nodeId": "door-swiss-louis",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "upper-gifts",
+          "name": "Upper-level specialty shops",
+          "category": "shop",
+          "floor": 2,
+          "x": 94,
+          "y": 134,
+          "w": 35,
+          "h": 18,
+          "zone": "N-2",
+          "nodeId": "door-upper-gifts",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "scrumptious",
+          "name": "Scrumptious & neighbors",
+          "category": "shop",
+          "floor": 2,
+          "x": 23,
+          "y": 134,
+          "w": 35,
+          "h": 18,
+          "zone": "H-2 / J-2",
+          "nodeId": "door-scrumptious",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "upper-sealions",
+          "name": "Upper sea lion viewing",
+          "category": "viewpoint",
+          "floor": 2,
+          "x": 23,
+          "y": 86,
+          "w": 35,
+          "h": 18,
+          "zone": "K-2",
+          "nodeId": "door-upper-sealions",
+          "movable": false,
+          "capacity": 80,
+          "dwellMin": 8,
+          "dwellMax": 24,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 600,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "bubba-gump",
+          "name": "Bubba Gump Shrimp Co.",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 94,
+          "y": 86,
+          "w": 35,
+          "h": 18,
+          "zone": "M-2",
+          "nodeId": "door-bubba-gump",
+          "movable": false,
+          "capacity": 90,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "fire-ice",
+          "name": "Fire + Ice",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 94,
+          "y": 62,
+          "w": 35,
+          "h": 18,
+          "zone": "M-2",
+          "nodeId": "door-fire-ice",
+          "movable": false,
+          "capacity": 70,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "snack-kiosk",
+          "name": "Promenade snack kiosk",
+          "category": "cafe",
+          "floor": 1,
+          "x": 65,
+          "y": 181,
+          "w": 4,
+          "h": 6,
+          "zone": "Planning assumption",
+          "nodeId": "f1-4",
+          "movable": true,
+          "areaM2": 6,
+          "capacity": 8,
+          "dwellMin": 4,
+          "dwellMax": 8,
+          "spendMin": 500,
+          "spendMax": 1000,
+          "purchaseProbability": 0.9,
+          "open": 660,
+          "close": 1140,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "Assumed movable kiosk for planning"
+        },
+        {
+          "id": "bay-seating",
+          "name": "Bay-side seating",
+          "category": "seating",
+          "floor": 1,
+          "x": 83,
+          "y": 60,
+          "w": 6,
+          "h": 6,
+          "zone": "Planning assumption",
+          "nodeId": "f1-9",
+          "movable": true,
+          "areaM2": 8,
+          "capacity": 12,
+          "dwellMin": 5,
+          "dwellMax": 15,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 600,
+          "close": 1260,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "Assumed movable amenity for planning"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "f1-0",
+          "floor": 1,
+          "x": 76,
+          "y": 290
+        },
+        {
+          "id": "f1-1",
+          "floor": 1,
+          "x": 76,
+          "y": 266
+        },
+        {
+          "id": "f1-2",
+          "floor": 1,
+          "x": 76,
+          "y": 242
+        },
+        {
+          "id": "f1-3",
+          "floor": 1,
+          "x": 76,
+          "y": 218
+        },
+        {
+          "id": "f1-4",
+          "floor": 1,
+          "x": 76,
+          "y": 194
+        },
+        {
+          "id": "f1-5",
+          "floor": 1,
+          "x": 76,
+          "y": 170
+        },
+        {
+          "id": "f1-6",
+          "floor": 1,
+          "x": 76,
+          "y": 146
+        },
+        {
+          "id": "f1-7",
+          "floor": 1,
+          "x": 76,
+          "y": 122
+        },
+        {
+          "id": "f1-8",
+          "floor": 1,
+          "x": 76,
+          "y": 98
+        },
+        {
+          "id": "f1-9",
+          "floor": 1,
+          "x": 76,
+          "y": 74
+        },
+        {
+          "id": "f1-10",
+          "floor": 1,
+          "x": 76,
+          "y": 50
+        },
+        {
+          "id": "f2-0",
+          "floor": 2,
+          "x": 76,
+          "y": 290
+        },
+        {
+          "id": "f2-1",
+          "floor": 2,
+          "x": 76,
+          "y": 266
+        },
+        {
+          "id": "f2-2",
+          "floor": 2,
+          "x": 76,
+          "y": 242
+        },
+        {
+          "id": "f2-3",
+          "floor": 2,
+          "x": 76,
+          "y": 218
+        },
+        {
+          "id": "f2-4",
+          "floor": 2,
+          "x": 76,
+          "y": 194
+        },
+        {
+          "id": "f2-5",
+          "floor": 2,
+          "x": 76,
+          "y": 170
+        },
+        {
+          "id": "f2-6",
+          "floor": 2,
+          "x": 76,
+          "y": 146
+        },
+        {
+          "id": "f2-7",
+          "floor": 2,
+          "x": 76,
+          "y": 122
+        },
+        {
+          "id": "f2-8",
+          "floor": 2,
+          "x": 76,
+          "y": 98
+        },
+        {
+          "id": "f2-9",
+          "floor": 2,
+          "x": 76,
+          "y": 74
+        },
+        {
+          "id": "f2-10",
+          "floor": 2,
+          "x": 76,
+          "y": 50
+        },
+        {
+          "id": "west-1-0",
+          "floor": 1,
+          "x": 63,
+          "y": 290
+        },
+        {
+          "id": "west-1-1",
+          "floor": 1,
+          "x": 63,
+          "y": 266
+        },
+        {
+          "id": "west-1-2",
+          "floor": 1,
+          "x": 63,
+          "y": 242
+        },
+        {
+          "id": "west-1-3",
+          "floor": 1,
+          "x": 63,
+          "y": 218
+        },
+        {
+          "id": "west-1-4",
+          "floor": 1,
+          "x": 63,
+          "y": 194
+        },
+        {
+          "id": "west-1-5",
+          "floor": 1,
+          "x": 63,
+          "y": 170
+        },
+        {
+          "id": "west-1-6",
+          "floor": 1,
+          "x": 63,
+          "y": 146
+        },
+        {
+          "id": "west-1-7",
+          "floor": 1,
+          "x": 63,
+          "y": 122
+        },
+        {
+          "id": "west-1-8",
+          "floor": 1,
+          "x": 63,
+          "y": 98
+        },
+        {
+          "id": "west-1-9",
+          "floor": 1,
+          "x": 63,
+          "y": 74
+        },
+        {
+          "id": "west-1-10",
+          "floor": 1,
+          "x": 63,
+          "y": 50
+        },
+        {
+          "id": "west-2-0",
+          "floor": 2,
+          "x": 63,
+          "y": 290
+        },
+        {
+          "id": "west-2-1",
+          "floor": 2,
+          "x": 63,
+          "y": 266
+        },
+        {
+          "id": "west-2-2",
+          "floor": 2,
+          "x": 63,
+          "y": 242
+        },
+        {
+          "id": "west-2-3",
+          "floor": 2,
+          "x": 63,
+          "y": 218
+        },
+        {
+          "id": "west-2-4",
+          "floor": 2,
+          "x": 63,
+          "y": 194
+        },
+        {
+          "id": "west-2-5",
+          "floor": 2,
+          "x": 63,
+          "y": 170
+        },
+        {
+          "id": "west-2-6",
+          "floor": 2,
+          "x": 63,
+          "y": 146
+        },
+        {
+          "id": "west-2-7",
+          "floor": 2,
+          "x": 63,
+          "y": 122
+        },
+        {
+          "id": "west-2-8",
+          "floor": 2,
+          "x": 63,
+          "y": 98
+        },
+        {
+          "id": "west-2-9",
+          "floor": 2,
+          "x": 63,
+          "y": 74
+        },
+        {
+          "id": "west-2-10",
+          "floor": 2,
+          "x": 63,
+          "y": 50
+        },
+        {
+          "id": "entry",
+          "floor": 1,
+          "x": 76,
+          "y": 312,
+          "label": "Entrance plaza"
+        },
+        {
+          "id": "door-wipeout",
+          "x": 58,
+          "y": 287,
+          "floor": 1
+        },
+        {
+          "id": "door-hard-rock",
+          "x": 94,
+          "y": 287,
+          "floor": 1
+        },
+        {
+          "id": "door-souvenirs-south",
+          "x": 58,
+          "y": 263,
+          "floor": 1
+        },
+        {
+          "id": "door-aquarium",
+          "x": 94,
+          "y": 263,
+          "floor": 1
+        },
+        {
+          "id": "door-sweet-treats",
+          "x": 58,
+          "y": 239,
+          "floor": 1
+        },
+        {
+          "id": "door-east-retail",
+          "x": 94,
+          "y": 239,
+          "floor": 1
+        },
+        {
+          "id": "door-specialty-west",
+          "x": 58,
+          "y": 215,
+          "floor": 1
+        },
+        {
+          "id": "door-musical-stairs",
+          "x": 94,
+          "y": 215,
+          "floor": 1
+        },
+        {
+          "id": "door-pier-market",
+          "x": 58,
+          "y": 191,
+          "floor": 1
+        },
+        {
+          "id": "door-north-retail",
+          "x": 94,
+          "y": 191,
+          "floor": 1
+        },
+        {
+          "id": "door-sf-socks",
+          "x": 58,
+          "y": 167,
+          "floor": 1
+        },
+        {
+          "id": "door-bay-plunge",
+          "x": 58,
+          "y": 143,
+          "floor": 1
+        },
+        {
+          "id": "door-west-gifts",
+          "x": 58,
+          "y": 119,
+          "floor": 1
+        },
+        {
+          "id": "door-carousel",
+          "x": 94,
+          "y": 71,
+          "floor": 1
+        },
+        {
+          "id": "door-christmas",
+          "x": 58,
+          "y": 95,
+          "floor": 1
+        },
+        {
+          "id": "door-7d",
+          "x": 94,
+          "y": 119,
+          "floor": 1
+        },
+        {
+          "id": "door-sea-lions",
+          "x": 58,
+          "y": 71,
+          "floor": 1
+        },
+        {
+          "id": "door-players",
+          "x": 94,
+          "y": 95,
+          "floor": 1
+        },
+        {
+          "id": "door-bay-stage",
+          "x": 94,
+          "y": 47,
+          "floor": 1
+        },
+        {
+          "id": "door-bay-lookout",
+          "x": 58,
+          "y": 47,
+          "floor": 1
+        },
+        {
+          "id": "door-fog-harbor",
+          "x": 58,
+          "y": 287,
+          "floor": 2
+        },
+        {
+          "id": "door-flyer",
+          "x": 94,
+          "y": 287,
+          "floor": 2
+        },
+        {
+          "id": "door-eagle",
+          "x": 58,
+          "y": 263,
+          "floor": 2
+        },
+        {
+          "id": "door-taco",
+          "x": 94,
+          "y": 263,
+          "floor": 2
+        },
+        {
+          "id": "door-crab-house",
+          "x": 58,
+          "y": 239,
+          "floor": 2
+        },
+        {
+          "id": "door-mirror-maze",
+          "x": 94,
+          "y": 215,
+          "floor": 2
+        },
+        {
+          "id": "door-spice-tea",
+          "x": 58,
+          "y": 215,
+          "floor": 2
+        },
+        {
+          "id": "door-swiss-louis",
+          "x": 58,
+          "y": 167,
+          "floor": 2
+        },
+        {
+          "id": "door-upper-gifts",
+          "x": 94,
+          "y": 143,
+          "floor": 2
+        },
+        {
+          "id": "door-scrumptious",
+          "x": 58,
+          "y": 143,
+          "floor": 2
+        },
+        {
+          "id": "door-upper-sealions",
+          "x": 58,
+          "y": 95,
+          "floor": 2
+        },
+        {
+          "id": "door-bubba-gump",
+          "x": 94,
+          "y": 95,
+          "floor": 2
+        },
+        {
+          "id": "door-fire-ice",
+          "x": 94,
+          "y": 71,
+          "floor": 2
+        }
+      ],
+      "edges": [
+        {
+          "id": "walk-1-0",
+          "from": "f1-0",
+          "to": "f1-1",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-1",
+          "from": "f1-1",
+          "to": "f1-2",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-2",
+          "from": "f1-2",
+          "to": "f1-3",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-3",
+          "from": "f1-3",
+          "to": "f1-4",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-4",
+          "from": "f1-4",
+          "to": "f1-5",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-5",
+          "from": "f1-5",
+          "to": "f1-6",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-6",
+          "from": "f1-6",
+          "to": "f1-7",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-7",
+          "from": "f1-7",
+          "to": "f1-8",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-8",
+          "from": "f1-8",
+          "to": "f1-9",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-9",
+          "from": "f1-9",
+          "to": "f1-10",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-0",
+          "from": "f2-0",
+          "to": "f2-1",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-1",
+          "from": "f2-1",
+          "to": "f2-2",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-2",
+          "from": "f2-2",
+          "to": "f2-3",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-3",
+          "from": "f2-3",
+          "to": "f2-4",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-4",
+          "from": "f2-4",
+          "to": "f2-5",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-5",
+          "from": "f2-5",
+          "to": "f2-6",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-6",
+          "from": "f2-6",
+          "to": "f2-7",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-7",
+          "from": "f2-7",
+          "to": "f2-8",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-8",
+          "from": "f2-8",
+          "to": "f2-9",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-9",
+          "from": "f2-9",
+          "to": "f2-10",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-0",
+          "from": "west-1-0",
+          "to": "west-1-1",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-1",
+          "from": "west-1-1",
+          "to": "west-1-2",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-2",
+          "from": "west-1-2",
+          "to": "west-1-3",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-3",
+          "from": "west-1-3",
+          "to": "west-1-4",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-4",
+          "from": "west-1-4",
+          "to": "west-1-5",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-5",
+          "from": "west-1-5",
+          "to": "west-1-6",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-6",
+          "from": "west-1-6",
+          "to": "west-1-7",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-7",
+          "from": "west-1-7",
+          "to": "west-1-8",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-8",
+          "from": "west-1-8",
+          "to": "west-1-9",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-9",
+          "from": "west-1-9",
+          "to": "west-1-10",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-0",
+          "from": "f1-0",
+          "to": "west-1-0",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-2",
+          "from": "f1-2",
+          "to": "west-1-2",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-4",
+          "from": "f1-4",
+          "to": "west-1-4",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-6",
+          "from": "f1-6",
+          "to": "west-1-6",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-8",
+          "from": "f1-8",
+          "to": "west-1-8",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-10",
+          "from": "f1-10",
+          "to": "west-1-10",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-0",
+          "from": "west-2-0",
+          "to": "west-2-1",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-1",
+          "from": "west-2-1",
+          "to": "west-2-2",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-2",
+          "from": "west-2-2",
+          "to": "west-2-3",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-3",
+          "from": "west-2-3",
+          "to": "west-2-4",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-4",
+          "from": "west-2-4",
+          "to": "west-2-5",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-5",
+          "from": "west-2-5",
+          "to": "west-2-6",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-6",
+          "from": "west-2-6",
+          "to": "west-2-7",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-7",
+          "from": "west-2-7",
+          "to": "west-2-8",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-8",
+          "from": "west-2-8",
+          "to": "west-2-9",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-9",
+          "from": "west-2-9",
+          "to": "west-2-10",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-0",
+          "from": "f2-0",
+          "to": "west-2-0",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-2",
+          "from": "f2-2",
+          "to": "west-2-2",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-4",
+          "from": "f2-4",
+          "to": "west-2-4",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-6",
+          "from": "f2-6",
+          "to": "west-2-6",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-8",
+          "from": "f2-8",
+          "to": "west-2-8",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-10",
+          "from": "f2-10",
+          "to": "west-2-10",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "entrance",
+          "from": "entry",
+          "to": "f1-0",
+          "width": 18,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "stairs-0",
+          "from": "f1-0",
+          "to": "f2-0",
+          "width": 3,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "stairs-4",
+          "from": "f1-4",
+          "to": "f2-4",
+          "width": 3,
+          "enabled": true,
+          "structural": true,
+          "accessible": false
+        },
+        {
+          "id": "stairs-8",
+          "from": "f1-8",
+          "to": "f2-8",
+          "width": 3,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "stairs-10",
+          "from": "f1-10",
+          "to": "f2-10",
+          "width": 3,
+          "enabled": true,
+          "structural": true,
+          "accessible": false
+        },
+        {
+          "id": "access-wipeout",
+          "from": "f1-0",
+          "to": "door-wipeout",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-hard-rock",
+          "from": "f1-0",
+          "to": "door-hard-rock",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-souvenirs-south",
+          "from": "f1-1",
+          "to": "door-souvenirs-south",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-aquarium",
+          "from": "f1-1",
+          "to": "door-aquarium",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-sweet-treats",
+          "from": "f1-2",
+          "to": "door-sweet-treats",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-east-retail",
+          "from": "f1-2",
+          "to": "door-east-retail",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-specialty-west",
+          "from": "f1-3",
+          "to": "door-specialty-west",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-musical-stairs",
+          "from": "f1-3",
+          "to": "door-musical-stairs",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-pier-market",
+          "from": "f1-4",
+          "to": "door-pier-market",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-north-retail",
+          "from": "f1-4",
+          "to": "door-north-retail",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-sf-socks",
+          "from": "f1-5",
+          "to": "door-sf-socks",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-bay-plunge",
+          "from": "f1-6",
+          "to": "door-bay-plunge",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-west-gifts",
+          "from": "f1-7",
+          "to": "door-west-gifts",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-carousel",
+          "from": "f1-9",
+          "to": "door-carousel",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-christmas",
+          "from": "f1-8",
+          "to": "door-christmas",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-7d",
+          "from": "f1-7",
+          "to": "door-7d",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-sea-lions",
+          "from": "f1-9",
+          "to": "door-sea-lions",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-players",
+          "from": "f1-8",
+          "to": "door-players",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-bay-stage",
+          "from": "f1-10",
+          "to": "door-bay-stage",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-bay-lookout",
+          "from": "f1-10",
+          "to": "door-bay-lookout",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-fog-harbor",
+          "from": "f2-0",
+          "to": "door-fog-harbor",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-flyer",
+          "from": "f2-0",
+          "to": "door-flyer",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-eagle",
+          "from": "f2-1",
+          "to": "door-eagle",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-taco",
+          "from": "f2-1",
+          "to": "door-taco",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-crab-house",
+          "from": "f2-2",
+          "to": "door-crab-house",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-mirror-maze",
+          "from": "f2-3",
+          "to": "door-mirror-maze",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-spice-tea",
+          "from": "f2-3",
+          "to": "door-spice-tea",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-swiss-louis",
+          "from": "f2-5",
+          "to": "door-swiss-louis",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-upper-gifts",
+          "from": "f2-6",
+          "to": "door-upper-gifts",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-scrumptious",
+          "from": "f2-6",
+          "to": "door-scrumptious",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-upper-sealions",
+          "from": "f2-8",
+          "to": "door-upper-sealions",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-bubba-gump",
+          "from": "f2-8",
+          "to": "door-bubba-gump",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-fire-ice",
+          "from": "f2-9",
+          "to": "door-fire-ice",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        }
+      ],
+      "sources": [
+        {
+          "label": "Official 2026 directory",
+          "url": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf",
+          "checked": "2026-11-08"
+        },
+        {
+          "label": "Published opening hours",
+          "url": "https://www.pier39.com/pier-info/address-hours/",
+          "checked": "2026-11-08"
+        },
+        {
+          "label": "Operator leasing facts · 2023 annual visitors and 976-space garage",
+          "url": "https://www.pier39.com/leasing/",
+          "checked": "2026-11-08"
+        }
+      ]
+    },
+    "variant": {
+      "parking": {
+        "enabled": true,
+        "spaces": 976
+      },
+      "version": "pier39.v2",
+      "id": "layout-a5eced42-2589-4c36-847e-1542ffb31be5",
+      "revision": 1,
+      "name": "Demo · bay-end kiosk, terrace dining & later hours",
+      "description": "Schematic of the published 2026 directory. Dimensions, connections and operating parameters are approximations; smaller tenants are grouped.",
+      "venues": [
+        {
+          "id": "wipeout",
+          "name": "Wipeout Bar & Grill",
+          "category": "restaurant",
+          "floor": 1,
+          "x": 23,
+          "y": 278,
+          "w": 35,
+          "h": 18,
+          "zone": "A-1",
+          "nodeId": "door-wipeout",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "hard-rock",
+          "name": "Hard Rock Cafe",
+          "category": "restaurant",
+          "floor": 1,
+          "x": 94,
+          "y": 278,
+          "w": 35,
+          "h": 18,
+          "zone": "Q-1",
+          "nodeId": "door-hard-rock",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "souvenirs-south",
+          "name": "Entrance gifts & apparel",
+          "category": "shop",
+          "floor": 1,
+          "x": 23,
+          "y": 254,
+          "w": 35,
+          "h": 18,
+          "zone": "B-1 / D-1",
+          "nodeId": "door-souvenirs-south",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "aquarium",
+          "name": "Aquarium of the Bay",
+          "category": "attraction",
+          "floor": 1,
+          "x": 94,
+          "y": 254,
+          "w": 35,
+          "h": 18,
+          "zone": "R-1",
+          "nodeId": "door-aquarium",
+          "movable": false,
+          "capacity": 90,
+          "dwellMin": 45,
+          "dwellMax": 75,
+          "spendMin": 3000,
+          "spendMax": 3800,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "sweet-treats",
+          "name": "Chocolate & sweet shops",
+          "category": "cafe",
+          "floor": 1,
+          "x": 23,
+          "y": 230,
+          "w": 35,
+          "h": 18,
+          "zone": "D-1",
+          "nodeId": "door-sweet-treats",
+          "movable": false,
+          "capacity": 14,
+          "dwellMin": 5,
+          "dwellMax": 18,
+          "spendMin": 600,
+          "spendMax": 1600,
+          "purchaseProbability": 0.9,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "east-retail",
+          "name": "East-side gifts & boutiques",
+          "category": "shop",
+          "floor": 1,
+          "x": 94,
+          "y": 230,
+          "w": 35,
+          "h": 18,
+          "zone": "P-1",
+          "nodeId": "door-east-retail",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "specialty-west",
+          "name": "West-side specialty shops",
+          "category": "shop",
+          "floor": 1,
+          "x": 23,
+          "y": 206,
+          "w": 35,
+          "h": 18,
+          "zone": "E-1",
+          "nodeId": "door-specialty-west",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "musical-stairs",
+          "name": "Musical stairs",
+          "category": "viewpoint",
+          "floor": 1,
+          "x": 94,
+          "y": 206,
+          "w": 35,
+          "h": 18,
+          "zone": "O-1",
+          "nodeId": "door-musical-stairs",
+          "movable": false,
+          "capacity": 15,
+          "dwellMin": 3,
+          "dwellMax": 8,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 600,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "pier-market",
+          "name": "Pier Market Seafood",
+          "category": "restaurant",
+          "floor": 1,
+          "x": 23,
+          "y": 182,
+          "w": 35,
+          "h": 18,
+          "zone": "F-1",
+          "nodeId": "door-pier-market",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1320,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "north-retail",
+          "name": "Apparel & local gifts",
+          "category": "shop",
+          "floor": 1,
+          "x": 94,
+          "y": 182,
+          "w": 35,
+          "h": 18,
+          "zone": "N-1",
+          "nodeId": "door-north-retail",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "sf-socks",
+          "name": "SF Sock Market & neighbors",
+          "category": "shop",
+          "floor": 1,
+          "x": 23,
+          "y": 158,
+          "w": 35,
+          "h": 18,
+          "zone": "G-1",
+          "nodeId": "door-sf-socks",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "bay-plunge",
+          "name": "The Bay Plunge",
+          "category": "attraction",
+          "floor": 1,
+          "x": 23,
+          "y": 134,
+          "w": 35,
+          "h": 18,
+          "zone": "H-1",
+          "nodeId": "door-bay-plunge",
+          "movable": false,
+          "capacity": 12,
+          "dwellMin": 5,
+          "dwellMax": 10,
+          "spendMin": 1200,
+          "spendMax": 1200,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "west-gifts",
+          "name": "West promenade gifts",
+          "category": "shop",
+          "floor": 1,
+          "x": 23,
+          "y": 110,
+          "w": 35,
+          "h": 18,
+          "zone": "I-1 / J-1",
+          "nodeId": "door-west-gifts",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "carousel",
+          "name": "San Francisco Carousel",
+          "category": "attraction",
+          "floor": 1,
+          "x": 94,
+          "y": 62,
+          "w": 35,
+          "h": 18,
+          "zone": "Bay end",
+          "nodeId": "door-carousel",
+          "movable": false,
+          "capacity": 24,
+          "dwellMin": 5,
+          "dwellMax": 8,
+          "spendMin": 1000,
+          "spendMax": 1000,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "christmas",
+          "name": "Christmas in San Francisco",
+          "category": "shop",
+          "floor": 1,
+          "x": 23,
+          "y": 86,
+          "w": 35,
+          "h": 18,
+          "zone": "K-1",
+          "nodeId": "door-christmas",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "7d",
+          "name": "7D Experience",
+          "category": "attraction",
+          "floor": 1,
+          "x": 94,
+          "y": 110,
+          "w": 35,
+          "h": 18,
+          "zone": "M-1",
+          "nodeId": "door-7d",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 10,
+          "dwellMax": 15,
+          "spendMin": 1200,
+          "spendMax": 2600,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "sea-lions",
+          "name": "Sea lion viewing",
+          "category": "viewpoint",
+          "floor": 1,
+          "x": 23,
+          "y": 62,
+          "w": 35,
+          "h": 18,
+          "zone": "K Dock",
+          "nodeId": "door-sea-lions",
+          "movable": false,
+          "capacity": 100,
+          "dwellMin": 8,
+          "dwellMax": 24,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 600,
+          "close": 1260,
+          "areaM2": 200,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "players",
+          "name": "Players Sports Grill & Arcade",
+          "category": "restaurant",
+          "floor": 1,
+          "x": 94,
+          "y": 86,
+          "w": 35,
+          "h": 18,
+          "zone": "L-1 / M-1",
+          "nodeId": "door-players",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "bay-stage",
+          "name": "Bay End Stage",
+          "category": "event",
+          "floor": 1,
+          "x": 94,
+          "y": 38,
+          "w": 35,
+          "h": 18,
+          "zone": "Bay end",
+          "nodeId": "door-bay-stage",
+          "movable": false,
+          "capacity": 45,
+          "dwellMin": 12,
+          "dwellMax": 25,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 660,
+          "close": 1140,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [
+            690,
+            750,
+            810,
+            870,
+            930,
+            990,
+            1050,
+            1110
+          ],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "bay-lookout",
+          "name": "Bay panorama",
+          "category": "viewpoint",
+          "floor": 1,
+          "x": 23,
+          "y": 38,
+          "w": 35,
+          "h": 18,
+          "zone": "Bay end",
+          "nodeId": "door-bay-lookout",
+          "movable": false,
+          "capacity": 40,
+          "dwellMin": 8,
+          "dwellMax": 24,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 600,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "fog-harbor",
+          "name": "Fog Harbor Fish House",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 23,
+          "y": 278,
+          "w": 35,
+          "h": 18,
+          "zone": "A-2",
+          "nodeId": "door-fog-harbor",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "flyer",
+          "name": "The Flyer & escape rooms",
+          "category": "attraction",
+          "floor": 2,
+          "x": 94,
+          "y": 278,
+          "w": 35,
+          "h": 18,
+          "zone": "Q-2",
+          "nodeId": "door-flyer",
+          "movable": false,
+          "capacity": 30,
+          "dwellMin": 20,
+          "dwellMax": 45,
+          "spendMin": 1200,
+          "spendMax": 2600,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "eagle",
+          "name": "Eagle Cafe",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 23,
+          "y": 254,
+          "w": 35,
+          "h": 18,
+          "zone": "A-2",
+          "nodeId": "door-eagle",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 1800,
+          "spendMax": 3500,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "taco",
+          "name": "Taco Cantina",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 94,
+          "y": 254,
+          "w": 35,
+          "h": 18,
+          "zone": "P-2",
+          "nodeId": "door-taco",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 1800,
+          "spendMax": 3200,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "crab-house",
+          "name": "Crab House",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 23,
+          "y": 230,
+          "w": 35,
+          "h": 18,
+          "zone": "C-2",
+          "nodeId": "door-crab-house",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 3500,
+          "spendMax": 6500,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "mirror-maze",
+          "name": "Magowan’s Mirror Maze",
+          "category": "attraction",
+          "floor": 2,
+          "x": 94,
+          "y": 206,
+          "w": 35,
+          "h": 18,
+          "zone": "O-2",
+          "nodeId": "door-mirror-maze",
+          "movable": false,
+          "capacity": 30,
+          "dwellMin": 10,
+          "dwellMax": 20,
+          "spendMin": 1000,
+          "spendMax": 1000,
+          "purchaseProbability": 1,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "spice-tea",
+          "name": "Spice & Tea Exchange",
+          "category": "shop",
+          "floor": 2,
+          "x": 23,
+          "y": 206,
+          "w": 35,
+          "h": 18,
+          "zone": "E-2",
+          "nodeId": "door-spice-tea",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "swiss-louis",
+          "name": "Swiss Louis",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 23,
+          "y": 158,
+          "w": 35,
+          "h": 18,
+          "zone": "G-2",
+          "nodeId": "door-swiss-louis",
+          "movable": false,
+          "capacity": 64,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "upper-gifts",
+          "name": "Proposed terrace restaurant",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 94,
+          "y": 134,
+          "w": 35,
+          "h": 18,
+          "zone": "N-2",
+          "nodeId": "door-upper-gifts",
+          "movable": false,
+          "capacity": 72,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2800,
+          "spendMax": 4600,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "Hypothetical management scenario; editable assumptions"
+        },
+        {
+          "id": "scrumptious",
+          "name": "Scrumptious & neighbors",
+          "category": "shop",
+          "floor": 2,
+          "x": 23,
+          "y": 134,
+          "w": 35,
+          "h": 18,
+          "zone": "H-2 / J-2",
+          "nodeId": "door-scrumptious",
+          "movable": false,
+          "capacity": 20,
+          "dwellMin": 5,
+          "dwellMax": 20,
+          "spendMin": 800,
+          "spendMax": 4500,
+          "purchaseProbability": 0.34,
+          "open": 600,
+          "close": 1200,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "upper-sealions",
+          "name": "Upper sea lion viewing",
+          "category": "viewpoint",
+          "floor": 2,
+          "x": 23,
+          "y": 86,
+          "w": 35,
+          "h": 18,
+          "zone": "K-2",
+          "nodeId": "door-upper-sealions",
+          "movable": false,
+          "capacity": 80,
+          "dwellMin": 8,
+          "dwellMax": 24,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 600,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "bubba-gump",
+          "name": "Bubba Gump Shrimp Co.",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 94,
+          "y": 86,
+          "w": 35,
+          "h": 18,
+          "zone": "M-2",
+          "nodeId": "door-bubba-gump",
+          "movable": false,
+          "capacity": 90,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "fire-ice",
+          "name": "Fire + Ice",
+          "category": "restaurant",
+          "floor": 2,
+          "x": 94,
+          "y": 62,
+          "w": 35,
+          "h": 18,
+          "zone": "M-2",
+          "nodeId": "door-fire-ice",
+          "movable": false,
+          "capacity": 70,
+          "dwellMin": 40,
+          "dwellMax": 75,
+          "spendMin": 2400,
+          "spendMax": 4800,
+          "purchaseProbability": 1,
+          "open": 660,
+          "close": 1260,
+          "areaM2": 110,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf"
+        },
+        {
+          "id": "snack-kiosk",
+          "name": "Promenade snack kiosk",
+          "category": "cafe",
+          "floor": 1,
+          "x": 65,
+          "y": 85,
+          "w": 4,
+          "h": 6,
+          "zone": "Planning assumption",
+          "nodeId": "west-1-8",
+          "movable": true,
+          "areaM2": 6,
+          "capacity": 8,
+          "dwellMin": 4,
+          "dwellMax": 8,
+          "spendMin": 500,
+          "spendMax": 1000,
+          "purchaseProbability": 0.9,
+          "open": 660,
+          "close": 1140,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "Assumed movable kiosk for planning"
+        },
+        {
+          "id": "bay-seating",
+          "name": "Bay-side seating",
+          "category": "seating",
+          "floor": 1,
+          "x": 83,
+          "y": 60,
+          "w": 6,
+          "h": 6,
+          "zone": "Planning assumption",
+          "nodeId": "f1-9",
+          "movable": true,
+          "areaM2": 8,
+          "capacity": 12,
+          "dwellMin": 5,
+          "dwellMax": 15,
+          "spendMin": 0,
+          "spendMax": 0,
+          "purchaseProbability": 0,
+          "open": 600,
+          "close": 1260,
+          "signage": 1,
+          "eventStarts": [],
+          "source": "Assumed movable amenity for planning"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "f1-0",
+          "floor": 1,
+          "x": 76,
+          "y": 290
+        },
+        {
+          "id": "f1-1",
+          "floor": 1,
+          "x": 76,
+          "y": 266
+        },
+        {
+          "id": "f1-2",
+          "floor": 1,
+          "x": 76,
+          "y": 242
+        },
+        {
+          "id": "f1-3",
+          "floor": 1,
+          "x": 76,
+          "y": 218
+        },
+        {
+          "id": "f1-4",
+          "floor": 1,
+          "x": 76,
+          "y": 194
+        },
+        {
+          "id": "f1-5",
+          "floor": 1,
+          "x": 76,
+          "y": 170
+        },
+        {
+          "id": "f1-6",
+          "floor": 1,
+          "x": 76,
+          "y": 146
+        },
+        {
+          "id": "f1-7",
+          "floor": 1,
+          "x": 76,
+          "y": 122
+        },
+        {
+          "id": "f1-8",
+          "floor": 1,
+          "x": 76,
+          "y": 98
+        },
+        {
+          "id": "f1-9",
+          "floor": 1,
+          "x": 76,
+          "y": 74
+        },
+        {
+          "id": "f1-10",
+          "floor": 1,
+          "x": 76,
+          "y": 50
+        },
+        {
+          "id": "f2-0",
+          "floor": 2,
+          "x": 76,
+          "y": 290
+        },
+        {
+          "id": "f2-1",
+          "floor": 2,
+          "x": 76,
+          "y": 266
+        },
+        {
+          "id": "f2-2",
+          "floor": 2,
+          "x": 76,
+          "y": 242
+        },
+        {
+          "id": "f2-3",
+          "floor": 2,
+          "x": 76,
+          "y": 218
+        },
+        {
+          "id": "f2-4",
+          "floor": 2,
+          "x": 76,
+          "y": 194
+        },
+        {
+          "id": "f2-5",
+          "floor": 2,
+          "x": 76,
+          "y": 170
+        },
+        {
+          "id": "f2-6",
+          "floor": 2,
+          "x": 76,
+          "y": 146
+        },
+        {
+          "id": "f2-7",
+          "floor": 2,
+          "x": 76,
+          "y": 122
+        },
+        {
+          "id": "f2-8",
+          "floor": 2,
+          "x": 76,
+          "y": 98
+        },
+        {
+          "id": "f2-9",
+          "floor": 2,
+          "x": 76,
+          "y": 74
+        },
+        {
+          "id": "f2-10",
+          "floor": 2,
+          "x": 76,
+          "y": 50
+        },
+        {
+          "id": "west-1-0",
+          "floor": 1,
+          "x": 63,
+          "y": 290
+        },
+        {
+          "id": "west-1-1",
+          "floor": 1,
+          "x": 63,
+          "y": 266
+        },
+        {
+          "id": "west-1-2",
+          "floor": 1,
+          "x": 63,
+          "y": 242
+        },
+        {
+          "id": "west-1-3",
+          "floor": 1,
+          "x": 63,
+          "y": 218
+        },
+        {
+          "id": "west-1-4",
+          "floor": 1,
+          "x": 63,
+          "y": 194
+        },
+        {
+          "id": "west-1-5",
+          "floor": 1,
+          "x": 63,
+          "y": 170
+        },
+        {
+          "id": "west-1-6",
+          "floor": 1,
+          "x": 63,
+          "y": 146
+        },
+        {
+          "id": "west-1-7",
+          "floor": 1,
+          "x": 63,
+          "y": 122
+        },
+        {
+          "id": "west-1-8",
+          "floor": 1,
+          "x": 63,
+          "y": 98
+        },
+        {
+          "id": "west-1-9",
+          "floor": 1,
+          "x": 63,
+          "y": 74
+        },
+        {
+          "id": "west-1-10",
+          "floor": 1,
+          "x": 63,
+          "y": 50
+        },
+        {
+          "id": "west-2-0",
+          "floor": 2,
+          "x": 63,
+          "y": 290
+        },
+        {
+          "id": "west-2-1",
+          "floor": 2,
+          "x": 63,
+          "y": 266
+        },
+        {
+          "id": "west-2-2",
+          "floor": 2,
+          "x": 63,
+          "y": 242
+        },
+        {
+          "id": "west-2-3",
+          "floor": 2,
+          "x": 63,
+          "y": 218
+        },
+        {
+          "id": "west-2-4",
+          "floor": 2,
+          "x": 63,
+          "y": 194
+        },
+        {
+          "id": "west-2-5",
+          "floor": 2,
+          "x": 63,
+          "y": 170
+        },
+        {
+          "id": "west-2-6",
+          "floor": 2,
+          "x": 63,
+          "y": 146
+        },
+        {
+          "id": "west-2-7",
+          "floor": 2,
+          "x": 63,
+          "y": 122
+        },
+        {
+          "id": "west-2-8",
+          "floor": 2,
+          "x": 63,
+          "y": 98
+        },
+        {
+          "id": "west-2-9",
+          "floor": 2,
+          "x": 63,
+          "y": 74
+        },
+        {
+          "id": "west-2-10",
+          "floor": 2,
+          "x": 63,
+          "y": 50
+        },
+        {
+          "id": "entry",
+          "floor": 1,
+          "x": 76,
+          "y": 312,
+          "label": "Entrance plaza"
+        },
+        {
+          "id": "door-wipeout",
+          "x": 58,
+          "y": 287,
+          "floor": 1
+        },
+        {
+          "id": "door-hard-rock",
+          "x": 94,
+          "y": 287,
+          "floor": 1
+        },
+        {
+          "id": "door-souvenirs-south",
+          "x": 58,
+          "y": 263,
+          "floor": 1
+        },
+        {
+          "id": "door-aquarium",
+          "x": 94,
+          "y": 263,
+          "floor": 1
+        },
+        {
+          "id": "door-sweet-treats",
+          "x": 58,
+          "y": 239,
+          "floor": 1
+        },
+        {
+          "id": "door-east-retail",
+          "x": 94,
+          "y": 239,
+          "floor": 1
+        },
+        {
+          "id": "door-specialty-west",
+          "x": 58,
+          "y": 215,
+          "floor": 1
+        },
+        {
+          "id": "door-musical-stairs",
+          "x": 94,
+          "y": 215,
+          "floor": 1
+        },
+        {
+          "id": "door-pier-market",
+          "x": 58,
+          "y": 191,
+          "floor": 1
+        },
+        {
+          "id": "door-north-retail",
+          "x": 94,
+          "y": 191,
+          "floor": 1
+        },
+        {
+          "id": "door-sf-socks",
+          "x": 58,
+          "y": 167,
+          "floor": 1
+        },
+        {
+          "id": "door-bay-plunge",
+          "x": 58,
+          "y": 143,
+          "floor": 1
+        },
+        {
+          "id": "door-west-gifts",
+          "x": 58,
+          "y": 119,
+          "floor": 1
+        },
+        {
+          "id": "door-carousel",
+          "x": 94,
+          "y": 71,
+          "floor": 1
+        },
+        {
+          "id": "door-christmas",
+          "x": 58,
+          "y": 95,
+          "floor": 1
+        },
+        {
+          "id": "door-7d",
+          "x": 94,
+          "y": 119,
+          "floor": 1
+        },
+        {
+          "id": "door-sea-lions",
+          "x": 58,
+          "y": 71,
+          "floor": 1
+        },
+        {
+          "id": "door-players",
+          "x": 94,
+          "y": 95,
+          "floor": 1
+        },
+        {
+          "id": "door-bay-stage",
+          "x": 94,
+          "y": 47,
+          "floor": 1
+        },
+        {
+          "id": "door-bay-lookout",
+          "x": 58,
+          "y": 47,
+          "floor": 1
+        },
+        {
+          "id": "door-fog-harbor",
+          "x": 58,
+          "y": 287,
+          "floor": 2
+        },
+        {
+          "id": "door-flyer",
+          "x": 94,
+          "y": 287,
+          "floor": 2
+        },
+        {
+          "id": "door-eagle",
+          "x": 58,
+          "y": 263,
+          "floor": 2
+        },
+        {
+          "id": "door-taco",
+          "x": 94,
+          "y": 263,
+          "floor": 2
+        },
+        {
+          "id": "door-crab-house",
+          "x": 58,
+          "y": 239,
+          "floor": 2
+        },
+        {
+          "id": "door-mirror-maze",
+          "x": 94,
+          "y": 215,
+          "floor": 2
+        },
+        {
+          "id": "door-spice-tea",
+          "x": 58,
+          "y": 215,
+          "floor": 2
+        },
+        {
+          "id": "door-swiss-louis",
+          "x": 58,
+          "y": 167,
+          "floor": 2
+        },
+        {
+          "id": "door-upper-gifts",
+          "x": 94,
+          "y": 143,
+          "floor": 2
+        },
+        {
+          "id": "door-scrumptious",
+          "x": 58,
+          "y": 143,
+          "floor": 2
+        },
+        {
+          "id": "door-upper-sealions",
+          "x": 58,
+          "y": 95,
+          "floor": 2
+        },
+        {
+          "id": "door-bubba-gump",
+          "x": 94,
+          "y": 95,
+          "floor": 2
+        },
+        {
+          "id": "door-fire-ice",
+          "x": 94,
+          "y": 71,
+          "floor": 2
+        }
+      ],
+      "edges": [
+        {
+          "id": "walk-1-0",
+          "from": "f1-0",
+          "to": "f1-1",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-1",
+          "from": "f1-1",
+          "to": "f1-2",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-2",
+          "from": "f1-2",
+          "to": "f1-3",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-3",
+          "from": "f1-3",
+          "to": "f1-4",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-4",
+          "from": "f1-4",
+          "to": "f1-5",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-5",
+          "from": "f1-5",
+          "to": "f1-6",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-6",
+          "from": "f1-6",
+          "to": "f1-7",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-7",
+          "from": "f1-7",
+          "to": "f1-8",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-8",
+          "from": "f1-8",
+          "to": "f1-9",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-1-9",
+          "from": "f1-9",
+          "to": "f1-10",
+          "width": 12,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-0",
+          "from": "f2-0",
+          "to": "f2-1",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-1",
+          "from": "f2-1",
+          "to": "f2-2",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-2",
+          "from": "f2-2",
+          "to": "f2-3",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-3",
+          "from": "f2-3",
+          "to": "f2-4",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-4",
+          "from": "f2-4",
+          "to": "f2-5",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-5",
+          "from": "f2-5",
+          "to": "f2-6",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-6",
+          "from": "f2-6",
+          "to": "f2-7",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-7",
+          "from": "f2-7",
+          "to": "f2-8",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-8",
+          "from": "f2-8",
+          "to": "f2-9",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "walk-2-9",
+          "from": "f2-9",
+          "to": "f2-10",
+          "width": 8,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-0",
+          "from": "west-1-0",
+          "to": "west-1-1",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-1",
+          "from": "west-1-1",
+          "to": "west-1-2",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-2",
+          "from": "west-1-2",
+          "to": "west-1-3",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-3",
+          "from": "west-1-3",
+          "to": "west-1-4",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-4",
+          "from": "west-1-4",
+          "to": "west-1-5",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-5",
+          "from": "west-1-5",
+          "to": "west-1-6",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-6",
+          "from": "west-1-6",
+          "to": "west-1-7",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-7",
+          "from": "west-1-7",
+          "to": "west-1-8",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-8",
+          "from": "west-1-8",
+          "to": "west-1-9",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-1-9",
+          "from": "west-1-9",
+          "to": "west-1-10",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-0",
+          "from": "f1-0",
+          "to": "west-1-0",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-2",
+          "from": "f1-2",
+          "to": "west-1-2",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-4",
+          "from": "f1-4",
+          "to": "west-1-4",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-6",
+          "from": "f1-6",
+          "to": "west-1-6",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-8",
+          "from": "f1-8",
+          "to": "west-1-8",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-1-10",
+          "from": "f1-10",
+          "to": "west-1-10",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-0",
+          "from": "west-2-0",
+          "to": "west-2-1",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-1",
+          "from": "west-2-1",
+          "to": "west-2-2",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-2",
+          "from": "west-2-2",
+          "to": "west-2-3",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-3",
+          "from": "west-2-3",
+          "to": "west-2-4",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-4",
+          "from": "west-2-4",
+          "to": "west-2-5",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-5",
+          "from": "west-2-5",
+          "to": "west-2-6",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-6",
+          "from": "west-2-6",
+          "to": "west-2-7",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-7",
+          "from": "west-2-7",
+          "to": "west-2-8",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-8",
+          "from": "west-2-8",
+          "to": "west-2-9",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "promenade-2-9",
+          "from": "west-2-9",
+          "to": "west-2-10",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-0",
+          "from": "f2-0",
+          "to": "west-2-0",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-2",
+          "from": "f2-2",
+          "to": "west-2-2",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-4",
+          "from": "f2-4",
+          "to": "west-2-4",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-6",
+          "from": "f2-6",
+          "to": "west-2-6",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-8",
+          "from": "f2-8",
+          "to": "west-2-8",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "cross-2-10",
+          "from": "f2-10",
+          "to": "west-2-10",
+          "width": 3,
+          "enabled": true,
+          "structural": false,
+          "accessible": true
+        },
+        {
+          "id": "entrance",
+          "from": "entry",
+          "to": "f1-0",
+          "width": 18,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "stairs-0",
+          "from": "f1-0",
+          "to": "f2-0",
+          "width": 3,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "stairs-4",
+          "from": "f1-4",
+          "to": "f2-4",
+          "width": 3,
+          "enabled": true,
+          "structural": true,
+          "accessible": false
+        },
+        {
+          "id": "stairs-8",
+          "from": "f1-8",
+          "to": "f2-8",
+          "width": 3,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "stairs-10",
+          "from": "f1-10",
+          "to": "f2-10",
+          "width": 3,
+          "enabled": true,
+          "structural": true,
+          "accessible": false
+        },
+        {
+          "id": "access-wipeout",
+          "from": "f1-0",
+          "to": "door-wipeout",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-hard-rock",
+          "from": "f1-0",
+          "to": "door-hard-rock",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-souvenirs-south",
+          "from": "f1-1",
+          "to": "door-souvenirs-south",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-aquarium",
+          "from": "f1-1",
+          "to": "door-aquarium",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-sweet-treats",
+          "from": "f1-2",
+          "to": "door-sweet-treats",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-east-retail",
+          "from": "f1-2",
+          "to": "door-east-retail",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-specialty-west",
+          "from": "f1-3",
+          "to": "door-specialty-west",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-musical-stairs",
+          "from": "f1-3",
+          "to": "door-musical-stairs",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-pier-market",
+          "from": "f1-4",
+          "to": "door-pier-market",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-north-retail",
+          "from": "f1-4",
+          "to": "door-north-retail",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-sf-socks",
+          "from": "f1-5",
+          "to": "door-sf-socks",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-bay-plunge",
+          "from": "f1-6",
+          "to": "door-bay-plunge",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-west-gifts",
+          "from": "f1-7",
+          "to": "door-west-gifts",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-carousel",
+          "from": "f1-9",
+          "to": "door-carousel",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-christmas",
+          "from": "f1-8",
+          "to": "door-christmas",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-7d",
+          "from": "f1-7",
+          "to": "door-7d",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-sea-lions",
+          "from": "f1-9",
+          "to": "door-sea-lions",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-players",
+          "from": "f1-8",
+          "to": "door-players",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-bay-stage",
+          "from": "f1-10",
+          "to": "door-bay-stage",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-bay-lookout",
+          "from": "f1-10",
+          "to": "door-bay-lookout",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-fog-harbor",
+          "from": "f2-0",
+          "to": "door-fog-harbor",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-flyer",
+          "from": "f2-0",
+          "to": "door-flyer",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-eagle",
+          "from": "f2-1",
+          "to": "door-eagle",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-taco",
+          "from": "f2-1",
+          "to": "door-taco",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-crab-house",
+          "from": "f2-2",
+          "to": "door-crab-house",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-mirror-maze",
+          "from": "f2-3",
+          "to": "door-mirror-maze",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-spice-tea",
+          "from": "f2-3",
+          "to": "door-spice-tea",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-swiss-louis",
+          "from": "f2-5",
+          "to": "door-swiss-louis",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-upper-gifts",
+          "from": "f2-6",
+          "to": "door-upper-gifts",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-scrumptious",
+          "from": "f2-6",
+          "to": "door-scrumptious",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-upper-sealions",
+          "from": "f2-8",
+          "to": "door-upper-sealions",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-bubba-gump",
+          "from": "f2-8",
+          "to": "door-bubba-gump",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        },
+        {
+          "id": "access-fire-ice",
+          "from": "f2-9",
+          "to": "door-fire-ice",
+          "width": 5,
+          "enabled": true,
+          "structural": true,
+          "accessible": true
+        }
+      ],
+      "sources": [
+        {
+          "label": "Official 2026 directory",
+          "url": "https://www.pier39.com/wp-content/uploads/2026/02/P39-PIER-Map-for-Website-2026.pdf",
+          "checked": "2026-11-08"
+        },
+        {
+          "label": "Published opening hours",
+          "url": "https://www.pier39.com/pier-info/address-hours/",
+          "checked": "2026-11-08"
+        },
+        {
+          "label": "Operator leasing facts · 2023 annual visitors and 976-space garage",
+          "url": "https://www.pier39.com/leasing/",
+          "checked": "2026-11-08"
+        }
+      ],
+      "scenario": {
+        "question": "Does a new restaurant serve unmet meal demand or take diners from existing tenants?",
+        "tradeoff": "Replace an upper-level retail cluster with 72 dining places. The commercial footprint stays fixed; construction costs are not modeled."
+      }
+    },
+    "config": {
+      "provider": "local",
+      "visitors": 1000,
+      "carShare": 0.35,
+      "initialParkedVehicles": 300,
+      "parkingBufferMinutes": 30,
+      "seed": "management-demo-v3",
+      "day": "weekend",
+      "start": 600,
+      "end": 1320,
+      "hourly": [
+        3,
+        6,
+        11,
+        14,
+        15,
+        14,
+        12,
+        10,
+        8,
+        5,
+        2,
+        2
+      ],
+      "speed": 100000
+    },
+    "pairs": [
+      {
+        "seed": "management-demo-v3-1",
+        "a": "run-ca2e6e53-44ff-42c0-8c99-e65389188341",
+        "b": "run-87af6d5e-99e2-4fe5-8e25-9f7d9c939105",
+        "status": "completed",
+        "cohortHash": "d96c11a666c562b619083019d06d46863ed75b508607d6902e5c6a1cb7aa71a0",
+        "venueSalesA": {
+          "wipeout": 184386,
+          "hard-rock": 353305,
+          "souvenirs-south": 126750,
+          "aquarium": 279218,
+          "sweet-treats": 50284,
+          "east-retail": 115684,
+          "specialty-west": 47831,
+          "musical-stairs": 0,
+          "pier-market": 178383,
+          "north-retail": 60380,
+          "sf-socks": 56938,
+          "bay-plunge": 55200,
+          "west-gifts": 23506,
+          "carousel": 61000,
+          "christmas": 7762,
+          "7d": 59963,
+          "sea-lions": 0,
+          "players": 25563,
+          "bay-stage": 0,
+          "bay-lookout": 0,
+          "fog-harbor": 170184,
+          "flyer": 189881,
+          "eagle": 110391,
+          "taco": 42699,
+          "crab-house": 47878,
+          "mirror-maze": 54000,
+          "spice-tea": 57149,
+          "swiss-louis": 0,
+          "upper-gifts": 17979,
+          "scrumptious": 44428,
+          "upper-sealions": 0,
+          "bubba-gump": 11304,
+          "fire-ice": 11947,
+          "snack-kiosk": 53833,
+          "bay-seating": 0
+        },
+        "venueSalesB": {
+          "wipeout": 181978,
+          "hard-rock": 381822,
+          "souvenirs-south": 145032,
+          "aquarium": 260248,
+          "sweet-treats": 41397,
+          "east-retail": 107717,
+          "specialty-west": 71534,
+          "musical-stairs": 0,
+          "pier-market": 144007,
+          "north-retail": 58330,
+          "sf-socks": 73200,
+          "bay-plunge": 63600,
+          "west-gifts": 39018,
+          "carousel": 55000,
+          "christmas": 11436,
+          "7d": 49988,
+          "sea-lions": 0,
+          "players": 25563,
+          "bay-stage": 0,
+          "bay-lookout": 0,
+          "fog-harbor": 150111,
+          "flyer": 214945,
+          "eagle": 105734,
+          "taco": 51601,
+          "crab-house": 64967,
+          "mirror-maze": 53000,
+          "spice-tea": 61542,
+          "swiss-louis": 9228,
+          "upper-gifts": 0,
+          "scrumptious": 66705,
+          "upper-sealions": 0,
+          "bubba-gump": 7402,
+          "fire-ice": 9683,
+          "snack-kiosk": 40705,
+          "bay-seating": 0
+        },
+        "metricsA": {
+          "attempted": 1000,
+          "parkingRejected": 0,
+          "parkingPeak": 302,
+          "mealEpisodes": 338,
+          "unmetDining": 239,
+          "totalWaitMinutes": 0,
+          "queueAbandonments": 0,
+          "sales": 2497826,
+          "arrived": 1000,
+          "departed": 1000,
+          "buyers": 611,
+          "spendPerVisitor": 2497.826,
+          "conversion": 0.611,
+          "averageVisit": 53.884635713670406,
+          "zeroSpendDepartures": 389,
+          "waiting": 0,
+          "occupancy": 0,
+          "salesPerM2": 809.4057031756319,
+          "hourly": [
+            {
+              "hour": 600,
+              "sales": 49056,
+              "visits": 34
+            },
+            {
+              "hour": 660,
+              "sales": 159566,
+              "visits": 59
+            },
+            {
+              "hour": 720,
+              "sales": 202418,
+              "visits": 121
+            },
+            {
+              "hour": 780,
+              "sales": 359094,
+              "visits": 149
+            },
+            {
+              "hour": 840,
+              "sales": 546543,
+              "visits": 171
+            },
+            {
+              "hour": 900,
+              "sales": 371940,
+              "visits": 110
+            },
+            {
+              "hour": 960,
+              "sales": 249208,
+              "visits": 111
+            },
+            {
+              "hour": 1020,
+              "sales": 245241,
+              "visits": 56
+            },
+            {
+              "hour": 1080,
+              "sales": 176305,
+              "visits": 99
+            },
+            {
+              "hour": 1140,
+              "sales": 123638,
+              "visits": 51
+            },
+            {
+              "hour": 1200,
+              "sales": 14817,
+              "visits": 19
+            },
+            {
+              "hour": 1260,
+              "sales": 0,
+              "visits": 20
+            }
+          ],
+          "categories": {
+            "attraction": 699262,
+            "shop": 558407,
+            "restaurant": 1136040,
+            "cafe": 104117
+          }
+        },
+        "metricsB": {
+          "attempted": 1000,
+          "parkingRejected": 0,
+          "parkingPeak": 302,
+          "mealEpisodes": 340,
+          "unmetDining": 232,
+          "totalWaitMinutes": 45.25,
+          "queueAbandonments": 4,
+          "sales": 2545493,
+          "arrived": 1000,
+          "departed": 1000,
+          "buyers": 626,
+          "spendPerVisitor": 2545.493,
+          "conversion": 0.626,
+          "averageVisit": 53.6558857136704,
+          "zeroSpendDepartures": 374,
+          "waiting": 0,
+          "occupancy": 0,
+          "salesPerM2": 824.8519118600129,
+          "hourly": [
+            {
+              "hour": 600,
+              "sales": 49056,
+              "visits": 34
+            },
+            {
+              "hour": 660,
+              "sales": 136216,
+              "visits": 59
+            },
+            {
+              "hour": 720,
+              "sales": 218031,
+              "visits": 121
+            },
+            {
+              "hour": 780,
+              "sales": 353870,
+              "visits": 149
+            },
+            {
+              "hour": 840,
+              "sales": 564550,
+              "visits": 171
+            },
+            {
+              "hour": 900,
+              "sales": 344316,
+              "visits": 110
+            },
+            {
+              "hour": 960,
+              "sales": 292269,
+              "visits": 111
+            },
+            {
+              "hour": 1020,
+              "sales": 244213,
+              "visits": 56
+            },
+            {
+              "hour": 1080,
+              "sales": 201359,
+              "visits": 99
+            },
+            {
+              "hour": 1140,
+              "sales": 115092,
+              "visits": 51
+            },
+            {
+              "hour": 1200,
+              "sales": 17992,
+              "visits": 19
+            },
+            {
+              "hour": 1260,
+              "sales": 8529,
+              "visits": 20
+            }
+          ],
+          "categories": {
+            "attraction": 696781,
+            "shop": 634514,
+            "restaurant": 1132096,
+            "cafe": 82102
+          }
+        },
+        "delta": 47667
+      },
+      {
+        "seed": "management-demo-v3-2",
+        "a": "run-6cd8e311-69a1-4a71-85ab-76b3bb0a940b",
+        "b": "run-1a7d1399-959b-430d-af21-c8ce00106db0",
+        "status": "completed",
+        "cohortHash": "546f97d3efad0d27ef377d8132abe17f8568e311fcd7adf0fe63e9f90ed0e147",
+        "venueSalesA": {
+          "wipeout": 86256,
+          "hard-rock": 400765,
+          "souvenirs-south": 60635,
+          "aquarium": 214788,
+          "sweet-treats": 46060,
+          "east-retail": 80881,
+          "specialty-west": 46455,
+          "musical-stairs": 0,
+          "pier-market": 158331,
+          "north-retail": 51372,
+          "sf-socks": 65362,
+          "bay-plunge": 52800,
+          "west-gifts": 35841,
+          "carousel": 39000,
+          "christmas": 21574,
+          "7d": 60902,
+          "sea-lions": 0,
+          "players": 2861,
+          "bay-stage": 0,
+          "bay-lookout": 0,
+          "fog-harbor": 121745,
+          "flyer": 162929,
+          "eagle": 52624,
+          "taco": 51428,
+          "crab-house": 5167,
+          "mirror-maze": 66000,
+          "spice-tea": 90858,
+          "swiss-louis": 6370,
+          "upper-gifts": 20090,
+          "scrumptious": 56801,
+          "upper-sealions": 0,
+          "bubba-gump": 11115,
+          "fire-ice": 57450,
+          "snack-kiosk": 73190,
+          "bay-seating": 0
+        },
+        "venueSalesB": {
+          "wipeout": 113359,
+          "hard-rock": 379564,
+          "souvenirs-south": 70465,
+          "aquarium": 244773,
+          "sweet-treats": 42872,
+          "east-retail": 110093,
+          "specialty-west": 51363,
+          "musical-stairs": 0,
+          "pier-market": 242884,
+          "north-retail": 43266,
+          "sf-socks": 35025,
+          "bay-plunge": 44400,
+          "west-gifts": 41763,
+          "carousel": 40000,
+          "christmas": 18622,
+          "7d": 53783,
+          "sea-lions": 0,
+          "players": 19269,
+          "bay-stage": 0,
+          "bay-lookout": 0,
+          "fog-harbor": 130659,
+          "flyer": 131054,
+          "eagle": 49933,
+          "taco": 54942,
+          "crab-house": 5167,
+          "mirror-maze": 56000,
+          "spice-tea": 76650,
+          "swiss-louis": 0,
+          "upper-gifts": 0,
+          "scrumptious": 90638,
+          "upper-sealions": 0,
+          "bubba-gump": 11115,
+          "fire-ice": 29852,
+          "snack-kiosk": 33419,
+          "bay-seating": 0
+        },
+        "metricsA": {
+          "attempted": 1000,
+          "parkingRejected": 0,
+          "parkingPeak": 301,
+          "mealEpisodes": 282,
+          "unmetDining": 310,
+          "totalWaitMinutes": 41.25,
+          "queueAbandonments": 0,
+          "sales": 2199650,
+          "arrived": 1000,
+          "departed": 1000,
+          "buyers": 573,
+          "spendPerVisitor": 2199.65,
+          "conversion": 0.573,
+          "averageVisit": 45.32864523194917,
+          "zeroSpendDepartures": 427,
+          "waiting": 0,
+          "occupancy": 0,
+          "salesPerM2": 712.7835385612443,
+          "hourly": [
+            {
+              "hour": 600,
+              "sales": 11406,
+              "visits": 13
+            },
+            {
+              "hour": 660,
+              "sales": 107846,
+              "visits": 57
+            },
+            {
+              "hour": 720,
+              "sales": 241711,
+              "visits": 142
+            },
+            {
+              "hour": 780,
+              "sales": 323629,
+              "visits": 119
+            },
+            {
+              "hour": 840,
+              "sales": 302420,
+              "visits": 128
+            },
+            {
+              "hour": 900,
+              "sales": 328613,
+              "visits": 151
+            },
+            {
+              "hour": 960,
+              "sales": 306357,
+              "visits": 109
+            },
+            {
+              "hour": 1020,
+              "sales": 241970,
+              "visits": 106
+            },
+            {
+              "hour": 1080,
+              "sales": 211759,
+              "visits": 81
+            },
+            {
+              "hour": 1140,
+              "sales": 107636,
+              "visits": 46
+            },
+            {
+              "hour": 1200,
+              "sales": 16303,
+              "visits": 31
+            },
+            {
+              "hour": 1260,
+              "sales": 0,
+              "visits": 17
+            }
+          ],
+          "categories": {
+            "shop": 529869,
+            "restaurant": 954112,
+            "attraction": 596419,
+            "cafe": 119250
+          }
+        },
+        "metricsB": {
+          "attempted": 1000,
+          "parkingRejected": 0,
+          "parkingPeak": 301,
+          "mealEpisodes": 306,
+          "unmetDining": 291,
+          "totalWaitMinutes": 0,
+          "queueAbandonments": 0,
+          "sales": 2220930,
+          "arrived": 1000,
+          "departed": 1000,
+          "buyers": 562,
+          "spendPerVisitor": 2220.93,
+          "conversion": 0.562,
+          "averageVisit": 47.027645231949165,
+          "zeroSpendDepartures": 438,
+          "waiting": 0,
+          "occupancy": 0,
+          "salesPerM2": 719.6791963707064,
+          "hourly": [
+            {
+              "hour": 600,
+              "sales": 11406,
+              "visits": 13
+            },
+            {
+              "hour": 660,
+              "sales": 116260,
+              "visits": 57
+            },
+            {
+              "hour": 720,
+              "sales": 247924,
+              "visits": 142
+            },
+            {
+              "hour": 780,
+              "sales": 286553,
+              "visits": 119
+            },
+            {
+              "hour": 840,
+              "sales": 369998,
+              "visits": 128
+            },
+            {
+              "hour": 900,
+              "sales": 316140,
+              "visits": 151
+            },
+            {
+              "hour": 960,
+              "sales": 259096,
+              "visits": 109
+            },
+            {
+              "hour": 1020,
+              "sales": 200202,
+              "visits": 106
+            },
+            {
+              "hour": 1080,
+              "sales": 205860,
+              "visits": 81
+            },
+            {
+              "hour": 1140,
+              "sales": 125074,
+              "visits": 46
+            },
+            {
+              "hour": 1200,
+              "sales": 51429,
+              "visits": 31
+            },
+            {
+              "hour": 1260,
+              "sales": 30988,
+              "visits": 17
+            }
+          ],
+          "categories": {
+            "shop": 537885,
+            "restaurant": 1036744,
+            "attraction": 570010,
+            "cafe": 76291
+          }
+        },
+        "delta": 21280
+      },
+      {
+        "seed": "management-demo-v3-3",
+        "a": "run-7aee82d4-ff3a-4d2c-9227-644f439d5ae2",
+        "b": "run-18b08f52-0acb-4b5e-80ab-44b4732766c5",
+        "status": "completed",
+        "cohortHash": "1207464ffb7f2f639d8c7878d3e6f9cf3cc51989f78cc4160402e415602fc71e",
+        "venueSalesA": {
+          "wipeout": 116186,
+          "hard-rock": 471754,
+          "souvenirs-south": 105170,
+          "aquarium": 259976,
+          "sweet-treats": 51812,
+          "east-retail": 59656,
+          "specialty-west": 64386,
+          "musical-stairs": 0,
+          "pier-market": 226251,
+          "north-retail": 101301,
+          "sf-socks": 43446,
+          "bay-plunge": 72000,
+          "west-gifts": 28085,
+          "carousel": 50000,
+          "christmas": 17408,
+          "7d": 78844,
+          "sea-lions": 0,
+          "players": 34713,
+          "bay-stage": 0,
+          "bay-lookout": 0,
+          "fog-harbor": 107891,
+          "flyer": 151343,
+          "eagle": 88646,
+          "taco": 41578,
+          "crab-house": 30585,
+          "mirror-maze": 63000,
+          "spice-tea": 41067,
+          "swiss-louis": 0,
+          "upper-gifts": 0,
+          "scrumptious": 39885,
+          "upper-sealions": 0,
+          "bubba-gump": 13713,
+          "fire-ice": 34925,
+          "snack-kiosk": 67785,
+          "bay-seating": 0
+        },
+        "venueSalesB": {
+          "wipeout": 108710,
+          "hard-rock": 513664,
+          "souvenirs-south": 93960,
+          "aquarium": 271500,
+          "sweet-treats": 49833,
+          "east-retail": 58420,
+          "specialty-west": 72140,
+          "musical-stairs": 0,
+          "pier-market": 163829,
+          "north-retail": 77211,
+          "sf-socks": 33615,
+          "bay-plunge": 74400,
+          "west-gifts": 52958,
+          "carousel": 49000,
+          "christmas": 9464,
+          "7d": 80501,
+          "sea-lions": 0,
+          "players": 34551,
+          "bay-stage": 0,
+          "bay-lookout": 0,
+          "fog-harbor": 117130,
+          "flyer": 205347,
+          "eagle": 83039,
+          "taco": 41515,
+          "crab-house": 14216,
+          "mirror-maze": 59000,
+          "spice-tea": 45247,
+          "swiss-louis": 12282,
+          "upper-gifts": 0,
+          "scrumptious": 45322,
+          "upper-sealions": 0,
+          "bubba-gump": 16385,
+          "fire-ice": 54644,
+          "snack-kiosk": 44688,
+          "bay-seating": 0
+        },
+        "metricsA": {
+          "attempted": 1000,
+          "parkingRejected": 0,
+          "parkingPeak": 302,
+          "mealEpisodes": 344,
+          "unmetDining": 306,
+          "totalWaitMinutes": 1,
+          "queueAbandonments": 0,
+          "sales": 2461406,
+          "arrived": 1000,
+          "departed": 1000,
+          "buyers": 613,
+          "spendPerVisitor": 2461.406,
+          "conversion": 0.613,
+          "averageVisit": 50.80559369395301,
+          "zeroSpendDepartures": 387,
+          "waiting": 0,
+          "occupancy": 0,
+          "salesPerM2": 797.6040181464679,
+          "hourly": [
+            {
+              "hour": 600,
+              "sales": 61886,
+              "visits": 34
+            },
+            {
+              "hour": 660,
+              "sales": 82624,
+              "visits": 47
+            },
+            {
+              "hour": 720,
+              "sales": 274652,
+              "visits": 126
+            },
+            {
+              "hour": 780,
+              "sales": 361722,
+              "visits": 135
+            },
+            {
+              "hour": 840,
+              "sales": 369447,
+              "visits": 156
+            },
+            {
+              "hour": 900,
+              "sales": 255947,
+              "visits": 100
+            },
+            {
+              "hour": 960,
+              "sales": 331156,
+              "visits": 124
+            },
+            {
+              "hour": 1020,
+              "sales": 291195,
+              "visits": 124
+            },
+            {
+              "hour": 1080,
+              "sales": 244625,
+              "visits": 90
+            },
+            {
+              "hour": 1140,
+              "sales": 167246,
+              "visits": 43
+            },
+            {
+              "hour": 1200,
+              "sales": 20906,
+              "visits": 5
+            },
+            {
+              "hour": 1260,
+              "sales": 0,
+              "visits": 16
+            }
+          ],
+          "categories": {
+            "attraction": 675163,
+            "shop": 500404,
+            "restaurant": 1166242,
+            "cafe": 119597
+          }
+        },
+        "metricsB": {
+          "attempted": 1000,
+          "parkingRejected": 0,
+          "parkingPeak": 302,
+          "mealEpisodes": 343,
+          "unmetDining": 305,
+          "totalWaitMinutes": 1.75,
+          "queueAbandonments": 0,
+          "sales": 2482571,
+          "arrived": 1000,
+          "departed": 1000,
+          "buyers": 598,
+          "spendPerVisitor": 2482.571,
+          "conversion": 0.598,
+          "averageVisit": 51.89634369395301,
+          "zeroSpendDepartures": 402,
+          "waiting": 0,
+          "occupancy": 0,
+          "salesPerM2": 804.4624108878808,
+          "hourly": [
+            {
+              "hour": 600,
+              "sales": 61886,
+              "visits": 34
+            },
+            {
+              "hour": 660,
+              "sales": 87555,
+              "visits": 47
+            },
+            {
+              "hour": 720,
+              "sales": 290094,
+              "visits": 126
+            },
+            {
+              "hour": 780,
+              "sales": 331614,
+              "visits": 135
+            },
+            {
+              "hour": 840,
+              "sales": 418563,
+              "visits": 156
+            },
+            {
+              "hour": 900,
+              "sales": 260554,
+              "visits": 100
+            },
+            {
+              "hour": 960,
+              "sales": 323872,
+              "visits": 124
+            },
+            {
+              "hour": 1020,
+              "sales": 288869,
+              "visits": 124
+            },
+            {
+              "hour": 1080,
+              "sales": 248462,
+              "visits": 90
+            },
+            {
+              "hour": 1140,
+              "sales": 142993,
+              "visits": 43
+            },
+            {
+              "hour": 1200,
+              "sales": 28109,
+              "visits": 5
+            },
+            {
+              "hour": 1260,
+              "sales": 0,
+              "visits": 16
+            }
+          ],
+          "categories": {
+            "attraction": 739748,
+            "shop": 488337,
+            "restaurant": 1159965,
+            "cafe": 94521
+          }
+        },
+        "delta": 21165
+      }
+    ],
+    "status": "completed",
+    "meanDelta": 30037.333333333332,
+    "range": [
+      21165,
+      47667
+    ],
+    "sd": 15267.847468891392
+  },
+  "runs": [
+    {
+      "a": {
+        "id": "run-ca2e6e53-44ff-42c0-8c99-e65389188341",
+        "seconds": 126.64784449999999,
+        "speed": 341.1033181855693,
+        "decisions": 1446
+      },
+      "b": {
+        "id": "run-87af6d5e-99e2-4fe5-8e25-9f7d9c939105",
+        "seconds": 391.350194458,
+        "speed": 110.38706665223405,
+        "decisions": 1437
+      }
+    },
+    {
+      "a": {
+        "id": "run-6cd8e311-69a1-4a71-85ab-76b3bb0a940b",
+        "seconds": 290.69485812499994,
+        "speed": 148.60943973568266,
+        "decisions": 1285
+      },
+      "b": {
+        "id": "run-1a7d1399-959b-430d-af21-c8ce00106db0",
+        "seconds": 380.76125066599997,
+        "speed": 113.45692326736949,
+        "decisions": 1287
+      }
+    },
+    {
+      "a": {
+        "id": "run-7aee82d4-ff3a-4d2c-9227-644f439d5ae2",
+        "seconds": 340.0331855840001,
+        "speed": 127.0464232066199,
+        "decisions": 1381
+      },
+      "b": {
+        "id": "run-18b08f52-0acb-4b5e-80ab-44b4732766c5",
+        "seconds": 83.26854820900014,
+        "speed": 518.8033288579744,
+        "decisions": 1385
+      }
+    }
+  ],
+  "replayFrames": 145,
+  "cohortHash": "d96c11a666c562b619083019d06d46863ed75b508607d6902e5c6a1cb7aa71a0",
+  "elapsedSeconds": 956.163,
+  "checks": [
+    "SpacetimeDB layout persistence",
+    "Matched exact cohorts",
+    "Real Engine and provider",
+    "Finite wallets and meals",
+    "Parking conservation",
+    "Venue/hour/category sales reconciliation",
+    "Paired venue decomposition",
+    "Saved replay with both floors"
+  ],
+  "health": {
+    "ready": true,
+    "storage": "SpacetimeDB",
+    "providers": {
+      "local": true,
+      "rules": true,
+      "jev": false
+    },
+    "version": "pier39.v2"
+  },
+  "identicalLocalAI": {
+    "id": "comparison-ece035a4-9516-4bed-920d-4f692118b70c",
+    "delta": 0,
+    "status": "completed"
+  },
+  "cancelledComparison": {
+    "id": "comparison-ad88698e-4a8b-402c-8731-041d7043fbc6",
+    "status": "incomplete",
+    "meanDelta": null
+  }
+}

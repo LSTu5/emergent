@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.data/
+.local/
+.venv/
+.env*
+work/
+__pycache__/
+*.log
+engine/module/node_modules/
+engine/module/dist/

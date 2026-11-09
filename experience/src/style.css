@@ -1225,3 +1225,55 @@ main.comparison-workspace > .left-panel {
 .tools button[draggable="true"] {
   cursor: grab;
 }
+
+.map-navigation button[aria-pressed="true"] {
+  background: #d5e7b4;
+  border-color: #738c64;
+}
+.visitor-status {
+  background: #eaf0e3;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.map-navigation {
+  flex-wrap: wrap;
+  max-width: calc(100% - 30px);
+  justify-content: flex-end;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
+/* Keep the selected person in the visible map below the live toolbar. */
+.simulation-workspace .map-shell .map-canvas {
+  height: clamp(360px, calc(100dvh - 240px), 760px);
+}
+@media (max-width: 800px) {
+  .live-controls {
+    position: static;
+  }
+  .simulation-workspace .map-shell .map-canvas {
+    height: min(65dvh, 560px);
+    min-height: 320px;
+  }
+  .map-hint {
+    bottom: 62px;
+    max-width: calc(100% - 32px);
+  }
+}
+@media (max-width: 800px) {
+  .simulation-workspace > .right-panel {
+    position: static;
+    max-height: none;
+  }
+  .title-actions {
+    flex-wrap: wrap;
+  }
+  .title-actions > button:first-child {
+    display: inline-flex;
+  }
+}

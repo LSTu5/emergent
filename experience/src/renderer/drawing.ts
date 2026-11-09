@@ -242,6 +242,7 @@ export function label(
       align: "center",
     },
   });
+  t.resolution = 4;
   t.anchor.set(0.5);
   t.position.set(x, y);
   parent.addChild(t);

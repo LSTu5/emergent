@@ -1,7 +1,14 @@
 import type { Frame, Layout, Point } from "../../../shared/contracts";
 
 type Pose = Frame["agents"][number];
-type Track = { pose: Pose; path: Point[]; start: number; duration: number };
+type Track = {
+  pose: Pose;
+  path: Point[];
+  distances: number[];
+  total: number;
+  start: number;
+  duration: number;
+};
 const length = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 
 /** Follow the actual traversed route; never cut across a building or between floors. */
@@ -46,10 +53,14 @@ export class VisitorMotion {
     const next = new Map<string, Track>();
     for (const pose of poses) {
       const previous = reset ? undefined : this.tracks.get(pose.id)?.pose;
+      const path =
+        previous && duration ? motionPath(layout, previous, pose) : [pose];
+      const distances = path.slice(1).map((point, i) => length(path[i], point));
       next.set(pose.id, {
         pose,
-        path:
-          previous && duration ? motionPath(layout, previous, pose) : [pose],
+        path,
+        distances,
+        total: distances.reduce((a, b) => a + b, 0),
         start: wall,
         duration,
       });
@@ -66,13 +77,11 @@ export class VisitorMotion {
     const progress = duration
       ? Math.min(1, Math.max(0, (wall - start) / duration))
       : 1;
-    let remaining =
-      path.slice(1).reduce((sum, point, i) => sum + length(path[i], point), 0) *
-      progress;
+    let remaining = track.total * progress;
     for (let i = 1; i < path.length; i++) {
       const a = path[i - 1],
         b = path[i],
-        distance = length(a, b);
+        distance = track.distances[i - 1];
       if (remaining < distance) {
         const t = remaining / distance;
         return {

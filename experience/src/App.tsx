@@ -36,6 +36,7 @@ import { PlacementControls, type Footprint } from "./PlacementControls";
 import { PierMap, COLORS } from "./Map";
 import { SCENARIOS, scenario } from "../../shared/scenarios";
 import { DemandExperiment } from "./DemandExperiment";
+import { visitorStatus, selectionNote } from "./visitorStatus";
 import { renderPolicy } from "./renderer/renderPolicy";
 import "./style.css";
 async function api(path: string, body?: unknown) {
@@ -209,13 +210,14 @@ export default function App() {
   );
   const labelFor = (a: Snapshot["agents"][number]) =>
     groupLabel(visitorProfiles.get(a.id) ?? a, run?.config.seed ?? "");
+  const actionPending = useRef(false);
   const controlRevision = useRef(0);
   const activeRun = useRef(runId);
   activeRun.current = runId;
   const editable = layout.id !== BASELINE.id;
   const viewLayout = tab === "simulate" && run ? run.layout : layout;
   const venue = viewLayout.venues.find((v) => v.id === selected);
-  const errors = validateLayout(layout);
+  const errors = useMemo(() => validateLayout(layout), [layout]);
   const frame = frameIndex >= 0 ? frames[frameIndex] : null;
   const visualFrame = frame ?? (live?.runId === runId ? live.frame : null);
   const metrics = visualFrame?.metrics ?? run?.metrics;
@@ -248,7 +250,7 @@ export default function App() {
     const timer = setInterval(() => {
       void api("/health")
         .then(setHealth)
-        .catch(() => {});
+        .catch(() => setHealth(null));
     }, 10000);
     return () => clearInterval(timer);
   }, []);
@@ -336,6 +338,8 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [replayPlaying, frameIndex, frames, replaySpeed, tab]);
   async function act(fn: () => Promise<void>) {
+    if (actionPending.current) return;
+    actionPending.current = true;
     setBusy(true);
     setError("");
     setNotice("");
@@ -344,6 +348,7 @@ export default function App() {
     } catch (e) {
       setError((e as Error).message);
     } finally {
+      actionPending.current = false;
       setBusy(false);
     }
   }
@@ -374,6 +379,8 @@ export default function App() {
     });
     setError("");
     setSelected("snack-kiosk");
+    setFloor(1);
+    setBothFloors(false);
     setGuest(null);
     setNotice(
       "Alternative created. Drag a highlighted object or its label to move it.",
@@ -1513,7 +1520,8 @@ export default function App() {
                     {guest &&
                       !guestList.slice(0, 100).some((a) => a.id === guest) && (
                         <option value={guest}>
-                          {guest} · no longer on pier
+                          {liveAgent ? labelFor(liveAgent) : guest} ·{" "}
+                          {selectionNote(!!recordedIds?.has(guest), !!frame)}
                         </option>
                       )}
                   </select>
@@ -1836,14 +1844,8 @@ export default function App() {
                 {recordedAgent?.floor ?? agent.position.floor}
                 {!frame && run?.status === "paused" ? " · paused" : ""}
               </p>
-              <p>
-                {agent.state === "visiting" ? "At" : "Heading to"}{" "}
-                {agent.target
-                  ? (viewLayout.venues.find((v) => v.id === agent.target)
-                      ?.name ?? agent.target)
-                  : agent.departing
-                    ? "the exit"
-                    : "choosing the next stop"}
+              <p className="visitor-status" role="status">
+                {visitorStatus(agent, viewLayout)}
               </p>
               <p>
                 {agent.size} visitors · {agent.state} ·{" "}

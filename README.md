@@ -26,17 +26,17 @@ Ports: Experience **4320**, Engine **4321**, SpacetimeDB **4322**, Laya **4318**
 
 ## Present the project
 
-1. Open **Current PIER 39**, use **Both levels**, then focus the boardwalk or upper terraces. Click a venue or use the destination directory.
-2. Open **Management questions** and create a scenario alternative. For example, replace the upper-level specialty shops with a restaurant. Review the capacity, meal duration, prices and hours in its inspector.
-3. Move the promenade kiosk, edit another tenant use or adjust restaurant hours. Undo, redo and reset work across changes. Save a version. Buildings, the pier boundary and structural floor connections stay fixed.
-4. Choose **Local AI · Laya**. The default is **5,000 attempted visitors**, 10:00–21:00. A **30,000-visitor demand stress** preset is available. Both are assumptions, not measured daily attendance. Every visitor is modeled in a group; dollars are never scaled up from a smaller sample.
-5. Open **Compare alternatives**. Run one illustrative pair or three pairs. The same profiles and arrivals attempt to visit each layout. A parking change can alter how many are admitted.
-6. Read absolute sales, percentage changes, seed variation, admitted visitors, parking turnaways, meals, waiting and no-purchase departures. **Where spending moved** separates gains and declines across venues, which reconcile to the net pier-wide change.
-7. Open a completed run, press **Replay**, then **Play recording** or scrub the timeline. Switch floors and inspect recorded venue and visitor state. A bundled recording of an actual completed local-AI run is imported on startup for a dependable presentation.
+1. Open **Current PIER 39**, then use **Quick test · 100 visitors**. This starts a short rules-driven run at 60×, 10:00–11:00.
+2. Pause, zoom and select a person or search a name in **Inspect visitor**. Profiles show fictional names and ages, shared budgets, the current destination and recorded decisions.
+3. Turn on **Follow visitor** to keep the selected party in view as it moves and changes levels. Drag the map, use arrow keys, press Escape or Fit to release the camera. The focused map supports +/− to zoom and 0 to fit.
+4. Use **Compare crowds** for a sequential 100 vs 200 test on the same base pier. Use 1,000 vs 2,000 for a larger check. Change visitor counts or arrival timing while holding the layout and business assumptions constant.
+5. In **Plan the pier**, create an alternative to explore editable kiosks, shops, seating or events. Resize, rotate, duplicate and move them while preserving fixed buildings and accessible paths. Save a version when ready.
+6. To exercise actual model inference, choose **Local AI · Laya** and start with a small crowd. Achieved speed depends on the model and hardware. Provider failures are explicit; the engine never silently switches to rules.
+7. Open **Saved runs** to replay a completed simulation. Recorded playback uses saved snapshots; it is not a continuous motion capture.
 
 In **Plan the pier**, create an alternative before editing. New kiosks, seating and event areas are placed in a clear, accessible space automatically. Drag the object or its label: green marks a valid position, red explains a blocked position, and an invalid drop leaves the object where it was. For an older draft with overlapping objects, **Find clear positions for objects** repairs movable placements while preserving business assumptions; the repair can be undone.
 
-Interactive runs start at **60×** so the day is watchable. Use **Pause simulation** above the map, scroll or use +/− to zoom, and click a person or choose **Inspect visitor**. The inspector shows the group ID, state, destination, wallet and recorded decisions. **Center visitor** brings that group into close view; camera position and selection survive live updates. A person marker represents a modeled visitor group. Resume continues the same run, and the live speed selector changes its pace. Opening a completed run starts recorded playback automatically, with separate playback speed and pause controls.
+Interactive runs start at **60×** so the day is watchable. Use **Pause simulation** above the map, scroll or use +/− to zoom, and click a person or choose **Inspect visitor**. The inspector shows the group ID, state, destination, wallet and recorded decisions. **Center visitor** brings that group into close view; camera position and selection survive live updates. Choose individual people or group markers; people in a party share one simulated route and wallet. Resume continues the same run, and the live speed selector changes its pace. Opening a completed run starts recorded playback automatically, with separate playback speed and pause controls.
 
 A live local-AI run can take minutes. Achieved speed is displayed; replay is the immediate demo path. The rules provider is faster and explicitly labeled. Geometry is frozen per run, so later edits apply to a new simulation. Saved layouts, reports and runs survive restart. Failed or interrupted pairs remain visible and are excluded from completed-pair summaries.
 
@@ -55,7 +55,7 @@ Scenario templates are questions, not recommended investments. A change may help
 ## Visitor and venue model
 
 - **35 destinations on two levels:** named restaurants and attractions, grouped shops, free viewpoints, a stage and two explicitly assumed movable planning objects.
-- **Groups:** purpose, interests, budget, time available, meal intent, a preferred landmark where relevant, hunger, fatigue, patience, familiarity, accessibility needs and arrival mode. A person-shaped marker represents a group; metrics count people.
+- **Groups:** purpose, interests, budget, time available, meal intent, a preferred landmark where relevant, hunger, fatigue, patience, familiarity, accessibility needs and arrival mode. Individual-person or group markers are available; metrics count people.
 - **Choices:** open, reachable and affordable options with sufficient time left; observed queues, proximity, hunger, fatigue and preferences. The engine offers up to six candidate destinations plus departure. Local AI estimates probabilities, and the engine samples using a seeded stream.
 - **Meals:** at most one purchased full restaurant meal per occasion, with at least four hours between meals and a hunger threshold. Cafés are snacks/light refreshments. People do not purchase repeated dinners just because more restaurants exist. Meal-intent departures without a meal are recorded; these are not all proven capacity failures.
 - **Aggregate venues:** arrivals consume capacity, wait or abandon, dwell, potentially purchase, then leave. Shops allow browsing without buying. Purchases use integer cents and finite group wallets. Restaurant admission requires enough remaining time for its minimum service duration. No tables, aisles, kitchens or indoor walking are simulated.
@@ -115,7 +115,7 @@ Open-source frameworks and the separately downloaded Laya model retain their own
 
 ### Quick simulation checks
 
-Use **Quick test · 100 visitors** to watch a short rules-driven run. Pause above the map, search/select a visitor group, and use **Center visitor** or scroll to zoom. The inspector shows its destination, budget and recent decisions; the selected route is drawn on the boardwalk. These are group markers, not one sprite per customer.
+Use **Quick test · 100 visitors** to watch a short rules-driven run. Pause above the map, search/select a visitor group, and use **Center visitor** or scroll to zoom. The inspector shows its destination, budget and recent decisions; the selected route is drawn on the boardwalk. Individual-person rendering is the default, with a group-marker option for simpler inspection.
 
 **Compare crowds** runs the current baseline twice, sequentially, with the same seed, prices and operating hours (10:00–21:00). Change only visitor counts and arrival profiles. Start with **100 vs 200**; **1,000 vs 2,000** is available for a larger test. Results show sales, per-visitor spending and visits on both floors. The latest experiment is retained in this browser; if the page closes between runs, reopen it to launch the queued run. Rules-mode estimates are illustrative, not calibrated revenue forecasts.
 
@@ -132,3 +132,9 @@ In an editable alternative, drag a kiosk, shop, seating or event tool onto the m
 ### Silent demo
 
 [Watch or download the 76-second captioned demo](docs/demo/pier39-demo.mp4) · [SRT captions](docs/demo/pier39-demo.srt). This recording demonstrates the live controls, pier levels and crowd comparison from commit `4b23974`; the visitor profiles and additional editing tools above were added afterward.
+
+### Harbor Lights-inspired inspection and rendering
+
+The Harbor Lights reference separates camera motion from scene construction and keeps its visitor graphics alive across position updates. This version now follows those patterns: **Follow visitor** tracks a selected party with a smooth camera and follows level changes, while manual panning releases it. Scenery is reused during panning, unchanged visitor graphics survive live updates, and route distances are computed once per update rather than once per person per animation frame. Rendering remains bounded at 300 markers, with overview mode at high simulation speed or crowd density. Reduced-motion preferences disable movement interpolation and camera easing.
+
+The live map fits the viewport beneath the controls. Inspection distinguishes waiting, choosing, visiting, walking and departed groups. Searching no longer labels a still-present selection as departed. Run actions reject repeated clicks while a command is pending, and the engine connection indicator clears when health polling fails.

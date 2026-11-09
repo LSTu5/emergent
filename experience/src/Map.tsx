@@ -7,6 +7,10 @@ import {
   type FederatedPointerEvent,
 } from "pixi.js";
 import { VisitorMotion, visitorStyle } from "./renderer/visitorMotion";
+import {
+  visitorPresentationKey,
+  followOffset,
+} from "./renderer/visitorPresentation";
 import { visitorMarkers } from "./renderer/visitorMarkers";
 import { placeVenue, snapCoordinate } from "../../shared/editing";
 import type {
@@ -67,6 +71,26 @@ export function PierMap(p: Props) {
     props = useRef(p),
     camera = useRef({ zoom: 1, x: 0, y: 0 });
   props.current = p;
+  const [following, setFollowing] = useState(false);
+  const followRef = useRef(false);
+  const automaticFloor = useRef<Floor | null>(null);
+  function follow(on: boolean) {
+    followRef.current = on;
+    setFollowing(on);
+  }
+  const activeGuest =
+    p.selectedGuest &&
+    (p.frame
+      ? p.frame.agents.some((a) => a.id === p.selectedGuest)
+      : p.run?.agents.some(
+          (a) =>
+            a.id === p.selectedGuest &&
+            a.state !== "pending" &&
+            a.state !== "departed",
+        ));
+  useEffect(() => {
+    if (!activeGuest || p.overview) follow(false);
+  }, [activeGuest, p.overview, p.run?.id]);
   const [mapError, setMapError] = useState("");
   const [attempt, setAttempt] = useState(0);
   const [hover, setHover] = useState<string | null>(null);
@@ -75,6 +99,8 @@ export function PierMap(p: Props) {
     invalid: boolean;
   } | null>(null);
   useEffect(() => {
+    if (automaticFloor.current !== p.floor) follow(false);
+    automaticFloor.current = null;
     camera.current = { zoom: 1, x: 0, y: 0 };
     (appRef.current as any)?.redraw?.();
   }, [p.both, p.floor]);
@@ -84,6 +110,20 @@ export function PierMap(p: Props) {
       resize: ResizeObserver;
     let render = () => {};
     let sceneKey = "";
+    let visitorKey = "";
+    let sceneRoot: Container | null = null;
+    let sceneScale = 1;
+    let sceneWidth = 0,
+      sceneHeight = 0;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const applyCamera = () => {
+      sceneRoot?.position.set(
+        (app.screen.width - sceneWidth * sceneScale) / 2 + camera.current.x,
+        (app.screen.height - sceneHeight * sceneScale) / 2 +
+          camera.current.y +
+          12,
+      );
+    };
     let layers: {
       models: Container;
       floor: Floor;
@@ -99,17 +139,32 @@ export function PierMap(p: Props) {
       selected: boolean;
     }[] = [];
     const drawVisitors = (p: Props, visitors: Frame["agents"]) => {
-      for (const sprite of sprites)
-        if (!sprite.graphic.destroyed)
-          sprite.graphic.destroy({ children: true });
-      sprites = [];
-      const markers = visitorMarkers(
-        visitors,
-        p.profiles,
-        p.run?.config.seed ?? "",
-        p.markerMode,
+      const key = visitorPresentationKey(visitors, [
+        p.run?.id,
         p.selectedGuest,
-      );
+        p.selectedMember,
+        p.markerMode,
+        p.markerScale,
+        p.markerLabels,
+        camera.current.zoom,
+      ]);
+      const rebuild = key !== visitorKey;
+      if (rebuild) {
+        for (const sprite of sprites)
+          if (!sprite.graphic.destroyed)
+            sprite.graphic.destroy({ children: true });
+        sprites = [];
+        visitorKey = key;
+      }
+      const markers = rebuild
+        ? visitorMarkers(
+            visitors,
+            p.profiles,
+            p.run?.config.seed ?? "",
+            p.markerMode,
+            p.selectedGuest,
+          )
+        : [];
       const poses = new Map(visitors.map((a) => [a.id, a]));
       for (const { models, floor, scale, trail } of layers) {
         trail.clear();
@@ -136,6 +191,7 @@ export function PierMap(p: Props) {
               );
           }
         }
+        if (!rebuild) continue;
         for (const marker of markers.filter(
           (m) => poses.get(m.groupId)?.floor === floor,
         )) {
@@ -226,15 +282,57 @@ export function PierMap(p: Props) {
     let removeWheel = () => {};
     let removeContextListener = () => {};
     let focusPending = false;
+    let lastAnimation = performance.now();
+    let requestedFloor: Floor | null = null;
     const animate = () => {
       const now = performance.now();
+      const elapsed = now - lastAnimation;
+      lastAnimation = now;
+      const positions = new Map<string, Point | undefined>();
+      const position = (id: string) => {
+        if (!positions.has(id)) positions.set(id, motion.point(id, now));
+        return positions.get(id);
+      };
       for (const sprite of sprites) {
-        const point = motion.point(sprite.id, now);
+        const point = position(sprite.id);
         if (!point) continue;
         const q = project(point.x + sprite.x, point.y + sprite.y, 0.3);
         sprite.graphic.position.set(q.x, q.y);
         sprite.graphic.zIndex =
           point.x + point.y + (sprite.selected ? 10000 : 1);
+      }
+      const p = props.current;
+      if (followRef.current && p.selectedGuest && !p.overview) {
+        const point = position(p.selectedGuest);
+        if (point) {
+          if (!p.both && p.floor !== point.floor) {
+            if (requestedFloor !== point.floor) {
+              requestedFloor = point.floor;
+              automaticFloor.current = point.floor;
+              focusPending = true;
+              p.onFloor(point.floor);
+            }
+            return;
+          }
+          requestedFloor = null;
+          const pane = sceneFrames(p.both, p.floor).find(
+            (f) => f.floor === point.floor,
+          )!;
+          const q = project(point.x, point.y);
+          Object.assign(
+            camera.current,
+            followOffset(
+              camera.current,
+              {
+                x: (sceneWidth / 2 - pane.x - q.x) * sceneScale,
+                y: (sceneHeight / 2 - pane.y - q.y) * sceneScale,
+              },
+              elapsed,
+              reducedMotion.matches,
+            ),
+          );
+          applyCamera();
+        }
       }
     };
     let cancelDrag: (() => void) | null = null;
@@ -274,6 +372,8 @@ export function PierMap(p: Props) {
         let pan: { x: number; y: number; cx: number; cy: number } | null = null;
         app.stage.on("pointerdown", (e) => {
           if (e.target === app.stage) {
+            follow(false);
+            host.current?.focus({ preventScroll: true });
             pan = {
               x: e.global.x,
               y: e.global.y,
@@ -318,15 +418,23 @@ export function PierMap(p: Props) {
         };
         app.canvas.addEventListener("wheel", wheel, { passive: false });
         removeWheel = () => app.canvas.removeEventListener("wheel", wheel);
+        app.ticker.maxFPS = 60;
         app.ticker.add(animate);
         (app as any).focusGuest = () => {
           const p = props.current;
           const agent =
             p.frame?.agents.find((a) => a.id === p.selectedGuest) ??
             p.run?.agents.find((a) => a.id === p.selectedGuest);
-          if (!agent) return;
+          if (
+            !agent ||
+            agent.state === "departed" ||
+            agent.state === "pending" ||
+            p.overview
+          )
+            return;
           const point = "position" in agent ? agent.position : agent;
           if (!p.both && p.floor !== point.floor) {
+            automaticFloor.current = point.floor;
             focusPending = true;
             p.onFloor(point.floor);
             return;
@@ -383,7 +491,8 @@ export function PierMap(p: Props) {
             p.layout,
             visitors,
             p.frame?.time ?? p.run?.time ?? 0,
-            p.recorded ? !p.playing : p.run?.status !== "running",
+            reducedMotion.matches ||
+              (p.recorded ? !p.playing : p.run?.status !== "running"),
             performance.now(),
           );
           const key = JSON.stringify([
@@ -395,17 +504,19 @@ export function PierMap(p: Props) {
             p.heat,
             p.editable,
             p.paths,
-            camera.current,
+            camera.current.zoom,
             app.screen.width,
             app.screen.height,
             p.heat !== "none" ? stats : null,
           ]);
           if (key === sceneKey) {
+            applyCamera();
             drawVisitors(p, visitors);
             animate();
             return;
           }
           sceneKey = key;
+          visitorKey = "";
           sprites = [];
           layers = [];
           app.stage
@@ -445,6 +556,10 @@ export function PierMap(p: Props) {
             oy =
               (app.screen.height - sceneH * scale) / 2 + camera.current.y + 12;
           const root = new Container();
+          sceneRoot = root;
+          sceneWidth = sceneW;
+          sceneHeight = sceneH;
+          sceneScale = scale;
           root.position.set(ox, oy);
           root.scale.set(scale);
           app.stage.addChild(root);
@@ -831,7 +946,36 @@ export function PierMap(p: Props) {
         ref={host}
         tabIndex={0}
         onKeyDown={(e) => {
-          if (!p.editable || e.altKey || e.ctrlKey || e.metaKey) return;
+          if (e.altKey || e.ctrlKey || e.metaKey) return;
+          if (e.key === "Escape") {
+            follow(false);
+            return;
+          }
+          if (["+", "=", "-", "0"].includes(e.key)) {
+            e.preventDefault();
+            if (e.key === "0") {
+              follow(false);
+              camera.current = { zoom: 1, x: 0, y: 0 };
+              (appRef.current as any)?.redraw?.();
+            } else zoom(e.key === "-" ? 0.8 : 1.25);
+            return;
+          }
+          if (!p.editable) {
+            const delta: Record<string, [number, number]> = {
+              ArrowLeft: [40, 0],
+              ArrowRight: [-40, 0],
+              ArrowUp: [0, 40],
+              ArrowDown: [0, -40],
+            };
+            if (delta[e.key]) {
+              e.preventDefault();
+              follow(false);
+              camera.current.x += delta[e.key][0];
+              camera.current.y += delta[e.key][1];
+              (appRef.current as any)?.redraw?.();
+            }
+            return;
+          }
           const v = p.layout.venues.find((v) => v.id === p.selected);
           if (!v?.movable) return;
           const delta: Record<string, [number, number]> = {
@@ -919,7 +1063,19 @@ export function PierMap(p: Props) {
         </small>
       </div>
       <div className="map-navigation">
-        {p.selectedGuest && (
+        {activeGuest && !p.overview && (
+          <button
+            aria-pressed={following}
+            onClick={() => {
+              setHover(null);
+              follow(!following);
+              if (!following) (appRef.current as any)?.focusGuest?.();
+            }}
+          >
+            {following ? "Following visitor" : "Follow visitor"}
+          </button>
+        )}
+        {activeGuest && !p.overview && (
           <button
             onClick={() => (appRef.current as any)?.focusGuest?.()}
             aria-label="Center on selected visitor"
@@ -936,6 +1092,7 @@ export function PierMap(p: Props) {
         <button
           aria-label="Fit pier to view"
           onClick={() => {
+            follow(false);
             camera.current = { zoom: 1, x: 0, y: 0 };
             (appRef.current as any)?.redraw?.();
           }}

@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-08",
+  "scope": "Harbor Lights-inspired visitor following and rendering stability",
+  "referenceReviewed": ["Harbor Lights experience/README.md", "Harbor Lights renderer/ParkScene.ts", "Harbor Lights features/live/ParkMap.tsx", "Harbor Lights features/inspector/InspectorPanel.tsx"],
+  "automated": {"tests": 42, "passed": 42, "typecheck": "passed", "productionBuild": "passed", "buildNote": "Existing Vite main chunk size advisory remains; build succeeds."},
+  "browser": {
+    "consoleErrors": 0,
+    "checks": ["100-visitor rules run completed", "Live visitor camera follows movement and changes from Level 1 to Level 2", "Pause and resume preserve inspection", "Manual panning and manual floor selection release follow", "Selected visitor remains correctly labeled when excluded by search", "Departed visitor shows visit finished instead of a stale destination", "Replay seeks restore historical visitor state", "600x playback uses overview mode; paused replay restores markers", "Narrow-screen Quick test remains visible and page has no horizontal overflow", "Desktop viewport restored after responsive check", "Valid and invalid object drags work after panning", "New alternatives open on the selected kiosk's Level 1"],
+    "screenshot": "docs/demo/harbor-style-inspection.png"
+  },
+  "localAI": {"runId": "run-7d573904-c43c-49c4-a380-618a437df491", "status": "completed", "model": "laya-multilingual-mlx-f2b4faf5", "attemptedVisitors": 12, "arrivedVisitors": 12, "storedMemberProfiles": 12, "window": "10:00–10:20", "salesCents": 0},
+  "limits": ["No new large-crowd Local AI throughput benchmark; 1000/2000 rules comparisons are covered by the automated suite.", "Recorded motion remains based on five-minute snapshots.", "Fictional members share group movement, choices and wallet.", "Rendering improvements are verified functionally; no FPS guarantee is claimed."]
+}
